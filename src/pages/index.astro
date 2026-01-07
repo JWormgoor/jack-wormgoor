@@ -49,6 +49,17 @@ const posts = [
         --shadow: 0 12px 34px rgba(0, 0, 0, 0.35);
       }
 
+      /* Golden hour theme */
+      html[data-theme="golden"] {
+        --bg: #1a140f;
+        --ink: #fff1dd;
+        --muted: #e3c7a3;
+        --card: #241b14;
+        --line: #3a2c21;
+        --accent: #ffcc8a;
+        --shadow: 0 12px 34px rgba(0, 0, 0, 0.45);
+      }
+
       * {
         box-sizing: border-box;
       }
@@ -108,6 +119,9 @@ const posts = [
         font-weight: 800;
         letter-spacing: 0.04em;
         box-shadow: var(--shadow);
+
+        transition: background-color 900ms ease, color 900ms ease, border-color 900ms ease,
+          box-shadow 900ms ease;
       }
 
       .nav {
@@ -121,7 +135,7 @@ const posts = [
         transition: background-color 600ms ease;
       }
       .nav a:hover {
-        background: rgba(0, 0, 0, 0.04);
+        background: rgba(127, 127, 127, 0.16);
       }
 
       .hero {
@@ -164,6 +178,9 @@ const posts = [
         border: 1px solid rgba(0, 0, 0, 0.06);
         box-shadow: var(--shadow);
         font-weight: 650;
+
+        transition: background-color 900ms ease, color 900ms ease, border-color 900ms ease,
+          box-shadow 900ms ease;
       }
 
       .btn.ghost {
@@ -171,6 +188,8 @@ const posts = [
         color: var(--ink);
         border: 1px solid var(--line);
         box-shadow: none;
+
+        transition: background-color 900ms ease, color 900ms ease, border-color 900ms ease;
       }
 
       .metrics {
@@ -186,6 +205,9 @@ const posts = [
         border-radius: var(--radius);
         padding: 14px 14px 12px;
         box-shadow: var(--shadow);
+
+        transition: background-color 900ms ease, color 900ms ease, border-color 900ms ease,
+          box-shadow 900ms ease;
       }
 
       .metric .label {
@@ -217,13 +239,6 @@ const posts = [
         padding: 18px;
         box-shadow: var(--shadow);
 
-        transition: background-color 900ms ease, color 900ms ease, border-color 900ms ease,
-          box-shadow 900ms ease;
-      }
-
-      .metric,
-      .mark,
-      .btn {
         transition: background-color 900ms ease, color 900ms ease, border-color 900ms ease,
           box-shadow 900ms ease;
       }
@@ -454,7 +469,7 @@ const posts = [
         setInterval(tick, 15000);
       })();
 
-      // 2) Sunrise / Sunset + theme switching
+      // 2) Sunrise / Sunset + theme switching (Day / Golden / Night)
       async function fetchSunTimes(lat, lng) {
         const url = `https://api.sunrise-sunset.org/json?lat=${lat}&lng=${lng}&formatted=0`;
         const res = await fetch(url);
@@ -469,24 +484,57 @@ const posts = [
 
       function applyThemeFromSun(sunrise, sunset) {
         const now = new Date();
+
+        // Golden window: 30 minutes after sunrise, and 30 minutes before sunset
+        const goldenMinutes = 30;
+        const goldenMs = goldenMinutes * 60 * 1000;
+
+        const goldenAfterSunriseStart = sunrise;
+        const goldenAfterSunriseEnd = new Date(sunrise.getTime() + goldenMs);
+
+        const goldenBeforeSunsetStart = new Date(sunset.getTime() - goldenMs);
+        const goldenBeforeSunsetEnd = sunset;
+
         const isDay = now >= sunrise && now < sunset;
-        document.documentElement.dataset.theme = isDay ? "light" : "dark";
-        setCard("mode", { value: isDay ? "Day" : "Night" });
+        const isGolden =
+          (now >= goldenAfterSunriseStart && now <= goldenAfterSunriseEnd) ||
+          (now >= goldenBeforeSunsetStart && now <= goldenBeforeSunsetEnd);
+
+        let theme = "dark";
+        if (isDay) theme = "light";
+        if (isGolden) theme = "golden";
+        if (!isDay) theme = "dark";
+
+        document.documentElement.dataset.theme = theme;
+
+        const label = theme === "light" ? "Day" : theme === "golden" ? "Golden" : "Night";
+        setCard("mode", { value: label, hint: `Golden window: ±${goldenMinutes} mins` });
       }
 
       function scheduleNextSwitch(sunrise, sunset) {
         const now = new Date();
-        let next = null;
+        const goldenMinutes = 30;
+        const goldenMs = goldenMinutes * 60 * 1000;
 
-        if (now < sunrise) next = sunrise;
-        else if (now < sunset) next = sunset;
-        else next = null;
+        // We schedule the soonest upcoming boundary among:
+        // sunrise, sunrise+golden, sunset-golden, sunset
+        const boundaries = [
+          sunrise,
+          new Date(sunrise.getTime() + goldenMs),
+          new Date(sunset.getTime() - goldenMs),
+          sunset,
+        ].filter((t) => t.getTime() > now.getTime());
 
-        if (!next) return;
+        if (boundaries.length === 0) return;
+
+        boundaries.sort((a, b) => a.getTime() - b.getTime());
+        const next = boundaries[0];
 
         const ms = next.getTime() - now.getTime();
         setTimeout(() => {
           applyThemeFromSun(sunrise, sunset);
+          // Re-schedule again after switching
+          scheduleNextSwitch(sunrise, sunset);
         }, Math.max(5000, ms + 5000));
       }
 
