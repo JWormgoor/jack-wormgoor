@@ -1,50 +1,274 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+const year = new Date().getFullYear();
+const metrics = [
+  { label: "Local time (UK)", value: "—", hint: "Updates automatically" },
+  { label: "Weather", value: "Coming soon", hint: "Open-Meteo (no key)" },
+  { label: "Currently", value: "Building", hint: "Manual / JSON later" },
+];
+
+const projects = [
+  { title: "Project title", desc: "One line about what it is. Keep it specific.", tag: "Build" },
+  { title: "Project title", desc: "One line about what it is. Keep it specific.", tag: "Experiment" },
+  { title: "Project title", desc: "One line about what it is. Keep it specific.", tag: "Software" },
+];
+
+const posts = [
+  { title: "Post title", desc: "A short description of what the post is about.", tag: "Notes" },
+  { title: "Post title", desc: "A short description of what the post is about.", tag: "Log" },
+];
 ---
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This
-				template serves as a lightweight, minimally-styled starting point for anyone looking to build
-				a personal website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to <a href="https://docs.astro.build/"
-					>read the docs
-				</a> or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out <a
-					href="https://github.com/Charca/astro-blog-template"
-					>astro-blog-template
-				</a> by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Jack Wormgoor</title>
+    <meta name="description" content="Jack Wormgoor — builder, experimenter, and problem solver." />
+    <style>
+      :root{
+        --bg:#F4F1EA;
+        --ink:#1F1A14;
+        --muted:#6B6258;
+        --card:#FBF9F4;
+        --line:#E4DED4;
+        --accent:#2A2119;
+        --radius:18px;
+        --shadow:0 10px 30px rgba(0,0,0,.06);
+      }
+      *{box-sizing:border-box}
+      html,body{margin:0;padding:0}
+      body{
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+        background:var(--bg);
+        color:var(--ink);
+        line-height:1.5;
+      }
+      a{color:inherit;text-decoration:none}
+      a:hover{opacity:.92}
+      .wrap{max-width:1020px;margin:0 auto;padding:28px 18px}
+      .header{
+        display:flex;align-items:center;justify-content:space-between;gap:18px;
+        padding-top:18px;padding-bottom:10px;
+      }
+      .brand{display:flex;align-items:center;gap:12px}
+      .mark{
+        width:40px;height:40px;border-radius:12px;
+        display:grid;place-items:center;
+        background:var(--accent);color:var(--bg);
+        font-weight:800;letter-spacing:.04em;
+        box-shadow:var(--shadow);
+      }
+      .nav{display:flex;gap:14px;flex-wrap:wrap}
+      .nav a{padding:8px 10px;border-radius:12px}
+      .nav a:hover{background:rgba(0,0,0,.04)}
+      .hero{padding:28px 0 12px}
+      .kicker{margin:0 0 10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-size:.78rem}
+      h1{margin:0 0 10px;font-size:clamp(2rem,4vw,3rem);line-height:1.08}
+      .lede{margin:0;max-width:68ch;color:var(--muted);font-size:1.05rem}
+      .cta{display:flex;gap:12px;margin:18px 0 18px;flex-wrap:wrap}
+      .btn{
+        display:inline-flex;align-items:center;justify-content:center;
+        padding:10px 14px;border-radius:14px;
+        background:var(--accent);color:var(--bg);
+        border:1px solid rgba(0,0,0,.06);
+        box-shadow:var(--shadow);
+        font-weight:650;
+      }
+      .btn.ghost{
+        background:transparent;color:var(--ink);
+        border:1px solid var(--line);
+        box-shadow:none;
+      }
+      .metrics{
+        display:grid;gap:12px;
+        grid-template-columns: repeat(3, minmax(0,1fr));
+        margin-top:10px;
+      }
+      .metric{
+        background:var(--card);
+        border:1px solid var(--line);
+        border-radius:var(--radius);
+        padding:14px 14px 12px;
+        box-shadow:var(--shadow);
+      }
+      .metric .label{font-size:.8rem;color:var(--muted)}
+      .metric .value{font-size:1.25rem;font-weight:800;margin-top:4px}
+      .metric .hint{font-size:.82rem;color:var(--muted);margin-top:6px}
+      .grid{
+        display:grid;gap:14px;
+        grid-template-columns: repeat(2, minmax(0,1fr));
+        margin-top:18px;
+      }
+      .card{
+        background:var(--card);
+        border:1px solid var(--line);
+        border-radius:var(--radius);
+        padding:18px;
+        box-shadow:var(--shadow);
+      }
+      .card h2{margin:0 0 8px;font-size:1.2rem}
+      .card h3{margin:0 0 6px;font-size:1.05rem}
+      .muted{color:var(--muted)}
+      .list{margin:10px 0 0;padding-left:18px;color:var(--muted)}
+      .list strong{color:var(--ink)}
+      .section{margin-top:26px}
+      .sectionhead{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+      .sectionhead h2{margin:0;font-size:1.3rem}
+      .cards{
+        display:grid;gap:14px;margin-top:12px;
+        grid-template-columns: repeat(3, minmax(0,1fr));
+      }
+      .linkcard{transition:transform .12s ease, box-shadow .12s ease}
+      .linkcard:hover{transform:translateY(-2px)}
+      .tag{
+        display:inline-block;margin-top:10px;
+        padding:6px 10px;border-radius:999px;
+        border:1px solid var(--line);
+        color:var(--muted);font-size:.8rem;
+        background:rgba(255,255,255,.35);
+      }
+      .footer{margin:30px 0 10px}
+      .contactline{margin:8px 0}
+      @media (max-width: 840px){
+        .metrics{grid-template-columns:1fr}
+        .grid{grid-template-columns:1fr}
+        .cards{grid-template-columns:1fr}
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="wrap header">
+      <a class="brand" href="/">
+        <span class="mark" aria-hidden="true">JW</span>
+        <span style="font-weight:700">Jack Wormgoor</span>
+      </a>
+
+      <nav class="nav" aria-label="Primary">
+        <a href="#projects">Projects</a>
+        <a href="#writing">Writing</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main class="wrap">
+      <section class="hero">
+        <p class="kicker">jackwormgoor.com</p>
+        <h1>Builder. Experimenter. Problem solver.</h1>
+        <p class="lede">
+          I build practical things and odd things — sometimes both at once. This is my corner of the
+          internet for projects, notes, and whatever I’m testing lately.
+        </p>
+
+        <div class="cta">
+          <a class="btn" href="#projects">View projects</a>
+          <a class="btn ghost" href="#contact">Contact</a>
+        </div>
+
+        <div class="metrics" aria-label="Live dashboard">
+          {metrics.map((m) => (
+            <div class="metric">
+              <div class="label">{m.label}</div>
+              <div class="value">{m.value}</div>
+              <div class="hint">{m.hint}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="grid">
+        <article class="card">
+          <h2>About</h2>
+          <p>
+            I like building systems that feel real — from workshop projects to software to field
+            experiments. I’m into practical engineering, playful problem-solving, and documenting
+            the process.
+          </p>
+          <p class="muted">Based in the UK. Usually covered in sawdust or tabs.</p>
+        </article>
+
+        <article class="card">
+          <h2>Now</h2>
+          <ul class="list">
+            <li><strong>Current focus:</strong> a “living” personal site with live metrics.</li>
+            <li><strong>Next:</strong> add a Projects index + 3 featured builds.</li>
+            <li><strong>Ongoing:</strong> documenting experiments (and the failures).</li>
+          </ul>
+        </article>
+      </section>
+
+      <section id="projects" class="section">
+        <div class="sectionhead">
+          <h2>Selected projects</h2>
+          <p class="muted">A few things I’ve built or am building. We’ll flesh these out next.</p>
+        </div>
+
+        <div class="cards">
+          {projects.map((p) => (
+            <a class="card linkcard" href="#">
+              <h3>{p.title}</h3>
+              <p class="muted">{p.desc}</p>
+              <span class="tag">{p.tag}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section id="writing" class="section">
+        <div class="sectionhead">
+          <h2>Writing & ideas</h2>
+          <p class="muted">Short notes, longer posts, and occasionally a rant about glue.</p>
+        </div>
+
+        <div class="cards">
+          {posts.map((p) => (
+            <a class="card linkcard" href="#">
+              <h3>{p.title}</h3>
+              <p class="muted">{p.desc}</p>
+              <span class="tag">{p.tag}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section id="contact" class="section">
+        <div class="sectionhead">
+          <h2>Contact</h2>
+          <p class="muted">Pick your weapon.</p>
+        </div>
+
+        <div class="cards" style="grid-template-columns: 1fr;">
+          <div class="card">
+            <p class="contactline"><strong>Email:</strong> <span class="muted">you@domain.com</span></p>
+            <p class="contactline"><strong>GitHub:</strong> <span class="muted">github.com/JWormgoor</span></p>
+            <p class="contactline"><strong>YouTube:</strong> <span class="muted">youtube.com/…</span></p>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <p class="muted">© {year} Jack Wormgoor. Built with Astro.</p>
+      </footer>
+    </main>
+
+    <script>
+      // Local time widget (no API)
+      const metricCards = Array.from(document.querySelectorAll(".metric"));
+      const timeCard = metricCards.find((el) =>
+        el.querySelector(".label")?.textContent?.includes("Local time")
+      );
+      if (timeCard) {
+        const valueEl = timeCard.querySelector(".value");
+        const hintEl = timeCard.querySelector(".hint");
+        const tick = () => {
+          const d = new Date();
+          valueEl.textContent = d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+          hintEl.textContent = d.toLocaleDateString([], { weekday: "short", day: "2-digit", month: "short" });
+        };
+        tick();
+        setInterval(tick, 15000);
+      }
+    </script>
+  </body>
 </html>
