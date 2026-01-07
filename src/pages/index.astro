@@ -1,21 +1,68 @@
 ---
 const year = new Date().getFullYear();
 
+const YOUTUBE_CHANNEL = "https://youtube.com/@jwormm?si=XgKqXQHFO98DQoAB";
+
 const metrics = [
   { key: "time", label: "Local time (UK)", value: "—", hint: "Updates automatically" },
   { key: "sun", label: "Sunrise / Sunset", value: "Loading…", hint: "sunrise-sunset.org API" },
-  { key: "mode", label: "Theme", value: "Auto", hint: "Fades at sunrise/sunset" },
+  { key: "mode", label: "Theme", value: "Auto", hint: "Day / Golden / Night" },
 ];
 
 const projects = [
-  { title: "Project title", desc: "One line about what it is. Keep it specific.", tag: "Build" },
-  { title: "Project title", desc: "One line about what it is. Keep it specific.", tag: "Experiment" },
-  { title: "Project title", desc: "One line about what it is. Keep it specific.", tag: "Software" },
+  {
+    title: "Fiat 500 Ride-On Conversion",
+    desc: "Turning a kid’s ride-on into something far more ridiculous: upgraded controls, dash bits, and better drive feel.",
+    tag: "Build",
+    status: "In progress",
+    progress: 85,
+    img: "/projects/fiat-rideon.jpg",
+    alt: "Pink Fiat 500 ride-on toy car parked outdoors",
+    links: [{ label: "Build log (soon)", href: "#" }],
+  },
+  {
+    title: "Shopping Trolley Drift Cart",
+    desc: "A motorised drift trolley build — silly, fast enough, and surprisingly stable once dialled in.",
+    tag: "Experiment",
+    status: "Completed",
+    img: "/projects/trolley-drift-cart.jpg",
+    alt: "A modified shopping trolley turned into a drift cart in a car park",
+    links: [
+      { label: "Watch on YouTube", href: "https://www.youtube.com/watch?v=jKCOE1u_Zvs" },
+      { label: "Details (soon)", href: "#" },
+    ],
+  },
+  {
+    title: "FM Emergency Broadcaster (≈7-mile range)",
+    desc: "Built from a car FM transmitter and upgraded into a longer-range local broadcast experiment for emergency-style messaging.",
+    tag: "Radio",
+    status: "Completed",
+    img: "/projects/fm-emergency-broadcaster.jpg",
+    alt: "An outdoor antenna mounted near a window at night",
+    links: [{ label: "How it works (soon)", href: "#" }],
+  },
+  {
+    title: "Flame Thrower Build",
+    desc: "A finished build project — one of those ‘because I can’ experiments, documented with care and restraint.",
+    tag: "Build",
+    status: "Completed",
+    img: "/projects/flame-thrower.jpg",
+    alt: "A flame thrower project photo",
+    links: [{ label: "Write-up (soon)", href: "#" }],
+  },
 ];
 
 const posts = [
-  { title: "Post title", desc: "A short description of what the post is about.", tag: "Notes" },
-  { title: "Post title", desc: "A short description of what the post is about.", tag: "Log" },
+  {
+    title: "Why I built this site",
+    desc: "A quick log of the build: Astro + Cloudflare Pages + live metrics.",
+    tag: "Log",
+  },
+  {
+    title: "Making a site that follows the sun",
+    desc: "Sunrise/sunset API + automatic day/golden/night themes.",
+    tag: "Notes",
+  },
 ];
 ---
 
@@ -49,7 +96,6 @@ const posts = [
         --shadow: 0 12px 34px rgba(0, 0, 0, 0.35);
       }
 
-      /* Golden hour theme */
       html[data-theme="golden"] {
         --bg: #1a140f;
         --ink: #fff1dd;
@@ -60,271 +106,192 @@ const posts = [
         --shadow: 0 12px 34px rgba(0, 0, 0, 0.45);
       }
 
-      * {
-        box-sizing: border-box;
-      }
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
 
       body {
         font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
         background: var(--bg);
         color: var(--ink);
         line-height: 1.5;
-
-        /* Smooth fade between themes */
         transition: background-color 900ms ease, color 900ms ease;
       }
 
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
-      a:hover {
-        opacity: 0.92;
-      }
+      a { color: inherit; text-decoration: none; }
+      a:hover { opacity: 0.92; }
 
-      .wrap {
-        max-width: 1020px;
-        margin: 0 auto;
-        padding: 28px 18px;
-      }
+      .wrap { max-width: 1020px; margin: 0 auto; padding: 28px 18px; }
 
       .header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 18px;
-        padding-top: 18px;
-        padding-bottom: 10px;
+        display: flex; align-items: center; justify-content: space-between; gap: 18px;
+        padding-top: 18px; padding-bottom: 10px;
       }
 
-      .brand {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
+      .brand { display: flex; align-items: center; gap: 12px; }
 
       .mark {
-        width: 40px;
-        height: 40px;
-        border-radius: 12px;
-        display: grid;
-        place-items: center;
-        background: var(--accent);
-        color: var(--bg);
-        font-weight: 800;
-        letter-spacing: 0.04em;
+        width: 40px; height: 40px; border-radius: 12px;
+        display: grid; place-items: center;
+        background: var(--accent); color: var(--bg);
+        font-weight: 800; letter-spacing: 0.04em;
         box-shadow: var(--shadow);
-
-        transition: background-color 900ms ease, color 900ms ease, border-color 900ms ease,
-          box-shadow 900ms ease;
+        transition: background-color 900ms ease, color 900ms ease, border-color 900ms ease, box-shadow 900ms ease;
       }
 
-      .nav {
-        display: flex;
-        gap: 14px;
-        flex-wrap: wrap;
-      }
-      .nav a {
-        padding: 8px 10px;
-        border-radius: 12px;
-        transition: background-color 600ms ease;
-      }
-      .nav a:hover {
-        background: rgba(127, 127, 127, 0.16);
-      }
+      .nav { display: flex; gap: 14px; flex-wrap: wrap; }
+      .nav a { padding: 8px 10px; border-radius: 12px; transition: background-color 600ms ease; }
+      .nav a:hover { background: rgba(127, 127, 127, 0.16); }
 
-      .hero {
-        padding: 28px 0 12px;
-      }
+      .hero { padding: 28px 0 12px; }
       .kicker {
-        margin: 0 0 10px;
-        color: var(--muted);
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        font-size: 0.78rem;
+        margin: 0 0 10px; color: var(--muted);
+        letter-spacing: 0.12em; text-transform: uppercase; font-size: 0.78rem;
       }
-      h1 {
-        margin: 0 0 10px;
-        font-size: clamp(2rem, 4vw, 3rem);
-        line-height: 1.08;
-      }
-      .lede {
-        margin: 0;
-        max-width: 68ch;
-        color: var(--muted);
-        font-size: 1.05rem;
-      }
+      h1 { margin: 0 0 10px; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.08; }
+      .lede { margin: 0; max-width: 68ch; color: var(--muted); font-size: 1.05rem; }
 
-      .cta {
-        display: flex;
-        gap: 12px;
-        margin: 18px 0 18px;
-        flex-wrap: wrap;
-      }
+      .cta { display: flex; gap: 12px; margin: 18px 0; flex-wrap: wrap; }
 
       .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 10px 14px;
-        border-radius: 14px;
-        background: var(--accent);
-        color: var(--bg);
+        display: inline-flex; align-items: center; justify-content: center;
+        padding: 10px 14px; border-radius: 14px;
+        background: var(--accent); color: var(--bg);
         border: 1px solid rgba(0, 0, 0, 0.06);
         box-shadow: var(--shadow);
         font-weight: 650;
-
-        transition: background-color 2500ms ease, color 2500ms ease, border-color 2500ms ease,
-          box-shadow 2500ms ease;
+        transition: background-color 900ms ease, color 900ms ease, border-color 900ms ease, box-shadow 900ms ease;
       }
 
       .btn.ghost {
-        background: transparent;
-        color: var(--ink);
+        background: transparent; color: var(--ink);
         border: 1px solid var(--line);
         box-shadow: none;
-
-        transition: background-color 2500ms ease, color 2500ms ease, border-color 2500ms ease;
       }
 
       .metrics {
-        display: grid;
-        gap: 12px;
+        display: grid; gap: 12px;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         margin-top: 10px;
       }
 
-      .metric {
+      .metric, .card {
         background: var(--card);
         border: 1px solid var(--line);
         border-radius: var(--radius);
-        padding: 14px 14px 12px;
         box-shadow: var(--shadow);
-
-        transition: background-color 2500ms ease, color 2500ms ease, border-color 2500ms ease,
-          box-shadow 2500ms ease;
+        transition: background-color 900ms ease, color 900ms ease, border-color 900ms ease, box-shadow 900ms ease;
       }
 
-      .metric .label {
-        font-size: 0.8rem;
-        color: var(--muted);
-      }
-      .metric .value {
-        font-size: 1.25rem;
-        font-weight: 800;
-        margin-top: 4px;
-      }
-      .metric .hint {
-        font-size: 0.82rem;
-        color: var(--muted);
-        margin-top: 6px;
-      }
+      .metric { padding: 14px 14px 12px; }
+      .metric .label { font-size: 0.8rem; color: var(--muted); }
+      .metric .value { font-size: 1.25rem; font-weight: 800; margin-top: 4px; }
+      .metric .hint { font-size: 0.82rem; color: var(--muted); margin-top: 6px; }
 
       .grid {
-        display: grid;
-        gap: 14px;
+        display: grid; gap: 14px;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         margin-top: 18px;
       }
 
-      .card {
-        background: var(--card);
-        border: 1px solid var(--line);
-        border-radius: var(--radius);
-        padding: 18px;
-        box-shadow: var(--shadow);
+      .card { padding: 18px; }
+      .card h2 { margin: 0 0 8px; font-size: 1.2rem; }
+      .card h3 { margin: 0 0 6px; font-size: 1.05rem; }
 
-        transition: background-color 2500ms ease, color 2500ms ease, border-color 2500ms ease,
-          box-shadow 2500ms ease;
-      }
+      .muted { color: var(--muted); }
+      .list { margin: 10px 0 0; padding-left: 18px; color: var(--muted); }
+      .list strong { color: var(--ink); }
 
-      .card h2 {
-        margin: 0 0 8px;
-        font-size: 1.2rem;
-      }
-      .card h3 {
-        margin: 0 0 6px;
-        font-size: 1.05rem;
-      }
-
-      .muted {
-        color: var(--muted);
-      }
-
-      .list {
-        margin: 10px 0 0;
-        padding-left: 18px;
-        color: var(--muted);
-      }
-      .list strong {
-        color: var(--ink);
-      }
-
-      .section {
-        margin-top: 26px;
-      }
+      .section { margin-top: 26px; }
       .sectionhead {
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        gap: 16px;
-        flex-wrap: wrap;
+        display: flex; align-items: flex-end; justify-content: space-between;
+        gap: 16px; flex-wrap: wrap;
       }
-      .sectionhead h2 {
-        margin: 0;
-        font-size: 1.3rem;
-      }
+      .sectionhead h2 { margin: 0; font-size: 1.3rem; }
 
+      /* Cards grid */
       .cards {
-        display: grid;
-        gap: 14px;
-        margin-top: 12px;
+        display: grid; gap: 14px; margin-top: 12px;
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
-      .linkcard {
-        transition: transform 2500ms ease, box-shadow 2500ms ease, background-color 2500ms ease,
-          border-color 2500ms ease;
-      }
-      .linkcard:hover {
-        transform: translateY(-2px);
+      /* Project cards */
+      .project {
+        padding: 0;
+        overflow: hidden;
       }
 
-      .tag {
-        display: inline-block;
-        margin-top: 10px;
+      /* Standardised image: square crop, no squish */
+      .thumb {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .projectBody { padding: 16px; }
+
+      .badgeRow { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
         padding: 6px 10px;
         border-radius: 999px;
         border: 1px solid var(--line);
         color: var(--muted);
-        font-size: 0.8rem;
-        background: rgba(255, 255, 255, 0.35);
-        transition: background-color 2500ms ease, border-color 2500ms ease, color 2500ms ease;
+        font-size: 0.78rem;
+        background: rgba(255, 255, 255, 0.28);
+        transition: background-color 900ms ease, border-color 900ms ease, color 900ms ease;
+        white-space: nowrap;
       }
 
-      .footer {
-        margin: 30px 0 10px;
+      .pill.strong { color: var(--ink); }
+
+      .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+
+      .actionLink {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 10px;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        color: var(--ink);
+        background: transparent;
+        font-size: 0.9rem;
       }
 
-      .contactline {
-        margin: 8px 0;
+      .actionLink:hover { background: rgba(127,127,127,0.12); }
+
+      /* Progress bar */
+      .progressWrap { margin-top: 10px; }
+      .progressTop {
+        display:flex; justify-content: space-between; gap: 12px;
+        font-size: 0.82rem; color: var(--muted);
+        margin-bottom: 6px;
       }
+      .bar {
+        height: 10px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        overflow: hidden;
+        background: rgba(127,127,127,0.10);
+      }
+      .fill {
+        height: 100%;
+        width: 0%;
+        background: var(--accent);
+        transition: width 900ms ease, background-color 900ms ease;
+      }
+
+      .footer { margin: 30px 0 10px; }
+      .contactline { margin: 8px 0; }
 
       @media (max-width: 840px) {
-        .metrics {
-          grid-template-columns: 1fr;
-        }
-        .grid {
-          grid-template-columns: 1fr;
-        }
-        .cards {
-          grid-template-columns: 1fr;
-        }
+        .metrics { grid-template-columns: 1fr; }
+        .grid { grid-template-columns: 1fr; }
+        .cards { grid-template-columns: 1fr; }
       }
     </style>
   </head>
@@ -381,9 +348,9 @@ const posts = [
         <article class="card">
           <h2>Now</h2>
           <ul class="list">
-            <li><strong>Current focus:</strong> a “living” personal site with live metrics.</li>
-            <li><strong>Next:</strong> add a Projects index + 3 featured builds.</li>
-            <li><strong>Ongoing:</strong> documenting experiments (and the failures).</li>
+            <li><strong>Current focus:</strong> finishing the ride-on conversion + documenting builds.</li>
+            <li><strong>Next:</strong> add proper project pages (photos, parts list, lessons).</li>
+            <li><strong>Ongoing:</strong> radio experiments and “why not?” engineering.</li>
           </ul>
         </article>
       </section>
@@ -391,16 +358,51 @@ const posts = [
       <section id="projects" class="section">
         <div class="sectionhead">
           <h2>Selected projects</h2>
-          <p class="muted">A few things I’ve built or am building. We’ll flesh these out next.</p>
+          <p class="muted">Real builds, real experiments — updated as I go.</p>
         </div>
 
         <div class="cards">
           {projects.map((p) => (
-            <a class="card linkcard" href="#">
-              <h3>{p.title}</h3>
-              <p class="muted">{p.desc}</p>
-              <span class="tag">{p.tag}</span>
-            </a>
+            <article class="card project">
+              {p.img ? <img class="thumb" src={p.img} alt={p.alt} loading="lazy" /> : null}
+
+              <div class="projectBody">
+                <h3 style="margin: 0">{p.title}</h3>
+                <p class="muted" style="margin: 6px 0 0">{p.desc}</p>
+
+                <div class="badgeRow">
+                  <span class="pill strong">{p.tag}</span>
+                  <span class="pill">{p.status}</span>
+                </div>
+
+                {typeof p.progress === "number" ? (
+                  <div class="progressWrap">
+                    <div class="progressTop">
+                      <span>Progress</span>
+                      <span>{p.progress}%</span>
+                    </div>
+                    <div class="bar" aria-label={`Progress ${p.progress}%`}>
+                      <div class="fill" style={`width:${p.progress}%`}></div>
+                    </div>
+                  </div>
+                ) : null}
+
+                {p.links?.length ? (
+                  <div class="actions">
+                    {p.links.map((l) => (
+                      <a
+                        class="actionLink"
+                        href={l.href}
+                        target={l.href.startsWith("http") ? "_blank" : undefined}
+                        rel={l.href.startsWith("http") ? "noreferrer" : undefined}
+                      >
+                        {l.label}
+                      </a>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            </article>
           ))}
         </div>
       </section>
@@ -408,15 +410,15 @@ const posts = [
       <section id="writing" class="section">
         <div class="sectionhead">
           <h2>Writing & ideas</h2>
-          <p class="muted">Short notes, longer posts, and occasionally a rant about glue.</p>
+          <p class="muted">Short notes, longer posts, and the occasional rant about glue.</p>
         </div>
 
         <div class="cards">
           {posts.map((p) => (
-            <a class="card linkcard" href="#">
-              <h3>{p.title}</h3>
-              <p class="muted">{p.desc}</p>
-              <span class="tag">{p.tag}</span>
+            <a class="card" href="#">
+              <h3 style="margin: 0 0 6px">{p.title}</h3>
+              <p class="muted" style="margin: 0">{p.desc}</p>
+              <span class="pill" style="margin-top: 10px; display: inline-flex">{p.tag}</span>
             </a>
           ))}
         </div>
@@ -432,7 +434,7 @@ const posts = [
           <div class="card">
             <p class="contactline"><strong>Email:</strong> <span class="muted">you@domain.com</span></p>
             <p class="contactline"><strong>GitHub:</strong> <span class="muted">github.com/JWormgoor</span></p>
-            <p class="contactline"><strong>YouTube:</strong> <span class="muted">youtube.com/…</span></p>
+            <p class="contactline"><strong>YouTube:</strong> <a class="muted" href={YOUTUBE_CHANNEL} target="_blank" rel="noreferrer">{YOUTUBE_CHANNEL}</a></p>
           </div>
         </div>
       </section>
@@ -456,7 +458,7 @@ const posts = [
         if (hint !== undefined) card.querySelector(".hint").textContent = hint;
       };
 
-      // 1) Local time widget (no API)
+      // 1) Local time widget
       (() => {
         const tick = () => {
           const d = new Date();
@@ -485,7 +487,6 @@ const posts = [
       function applyThemeFromSun(sunrise, sunset) {
         const now = new Date();
 
-        // Golden window: 30 minutes after sunrise, and 30 minutes before sunset
         const goldenMinutes = 30;
         const goldenMs = goldenMinutes * 60 * 1000;
 
@@ -495,15 +496,16 @@ const posts = [
         const goldenBeforeSunsetStart = new Date(sunset.getTime() - goldenMs);
         const goldenBeforeSunsetEnd = sunset;
 
-        const isDay = now >= sunrise && now < sunset;
         const isGolden =
           (now >= goldenAfterSunriseStart && now <= goldenAfterSunriseEnd) ||
           (now >= goldenBeforeSunsetStart && now <= goldenBeforeSunsetEnd);
 
-        let theme = "dark";
-        if (isDay) theme = "light";
+        const isDay = now >= sunrise && now < sunset;
+
+        let theme;
         if (isGolden) theme = "golden";
-        if (!isDay) theme = "dark";
+        else if (isDay) theme = "light";
+        else theme = "dark";
 
         document.documentElement.dataset.theme = theme;
 
@@ -516,8 +518,6 @@ const posts = [
         const goldenMinutes = 30;
         const goldenMs = goldenMinutes * 60 * 1000;
 
-        // We schedule the soonest upcoming boundary among:
-        // sunrise, sunrise+golden, sunset-golden, sunset
         const boundaries = [
           sunrise,
           new Date(sunrise.getTime() + goldenMs),
@@ -533,7 +533,6 @@ const posts = [
         const ms = next.getTime() - now.getTime();
         setTimeout(() => {
           applyThemeFromSun(sunrise, sunset);
-          // Re-schedule again after switching
           scheduleNextSwitch(sunrise, sunset);
         }, Math.max(5000, ms + 5000));
       }
@@ -542,7 +541,6 @@ const posts = [
         // Fallback location: Salisbury, UK
         const fallback = { lat: 51.0688, lng: -1.7945 };
 
-        // Try browser geolocation (optional)
         const position = await new Promise((resolve) => {
           if (!navigator.geolocation) return resolve(null);
           navigator.geolocation.getCurrentPosition(
@@ -568,7 +566,6 @@ const posts = [
           applyThemeFromSun(sunrise, sunset);
           scheduleNextSwitch(sunrise, sunset);
 
-          // Refresh every 4 hours (simple + reliable)
           setTimeout(() => initSunAndTheme(), 4 * 60 * 60 * 1000);
         } catch (e) {
           setCard("sun", { value: "Unavailable", hint: "Couldn’t fetch sun times" });
