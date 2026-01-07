@@ -1,9 +1,10 @@
 ---
 const year = new Date().getFullYear();
+
 const metrics = [
-  { label: "Local time (UK)", value: "—", hint: "Updates automatically" },
-  { label: "Weather", value: "Coming soon", hint: "Open-Meteo (no key)" },
-  { label: "Currently", value: "Building", hint: "Manual / JSON later" },
+  { key: "time", label: "Local time (UK)", value: "—", hint: "Updates automatically" },
+  { key: "sun", label: "Sunrise / Sunset", value: "Loading…", hint: "sunrise-sunset.org API" },
+  { key: "mode", label: "Theme", value: "Auto", hint: "Fades at sunrise/sunset" },
 ];
 
 const projects = [
@@ -19,121 +20,296 @@ const posts = [
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Jack Wormgoor</title>
     <meta name="description" content="Jack Wormgoor — builder, experimenter, and problem solver." />
+
     <style>
-      :root{
-        --bg:#F4F1EA;
-        --ink:#1F1A14;
-        --muted:#6B6258;
-        --card:#FBF9F4;
-        --line:#E4DED4;
-        --accent:#2A2119;
-        --radius:18px;
-        --shadow:0 10px 30px rgba(0,0,0,.06);
+      :root {
+        --bg: #f4f1ea;
+        --ink: #1f1a14;
+        --muted: #6b6258;
+        --card: #fbf9f4;
+        --line: #e4ded4;
+        --accent: #2a2119;
+        --shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+        --radius: 18px;
       }
-      *{box-sizing:border-box}
-      html,body{margin:0;padding:0}
-      body{
+
+      html[data-theme="dark"] {
+        --bg: #0f1115;
+        --ink: #ede7dc;
+        --muted: #b7ad9f;
+        --card: #151821;
+        --line: #2a2f3a;
+        --accent: #ede7dc;
+        --shadow: 0 12px 34px rgba(0, 0, 0, 0.35);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
         font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-        background:var(--bg);
-        color:var(--ink);
-        line-height:1.5;
+        background: var(--bg);
+        color: var(--ink);
+        line-height: 1.5;
+
+        /* Smooth fade between themes */
+        transition: background-color 900ms ease, color 900ms ease;
       }
-      a{color:inherit;text-decoration:none}
-      a:hover{opacity:.92}
-      .wrap{max-width:1020px;margin:0 auto;padding:28px 18px}
-      .header{
-        display:flex;align-items:center;justify-content:space-between;gap:18px;
-        padding-top:18px;padding-bottom:10px;
+
+      a {
+        color: inherit;
+        text-decoration: none;
       }
-      .brand{display:flex;align-items:center;gap:12px}
-      .mark{
-        width:40px;height:40px;border-radius:12px;
-        display:grid;place-items:center;
-        background:var(--accent);color:var(--bg);
-        font-weight:800;letter-spacing:.04em;
-        box-shadow:var(--shadow);
+      a:hover {
+        opacity: 0.92;
       }
-      .nav{display:flex;gap:14px;flex-wrap:wrap}
-      .nav a{padding:8px 10px;border-radius:12px}
-      .nav a:hover{background:rgba(0,0,0,.04)}
-      .hero{padding:28px 0 12px}
-      .kicker{margin:0 0 10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-size:.78rem}
-      h1{margin:0 0 10px;font-size:clamp(2rem,4vw,3rem);line-height:1.08}
-      .lede{margin:0;max-width:68ch;color:var(--muted);font-size:1.05rem}
-      .cta{display:flex;gap:12px;margin:18px 0 18px;flex-wrap:wrap}
-      .btn{
-        display:inline-flex;align-items:center;justify-content:center;
-        padding:10px 14px;border-radius:14px;
-        background:var(--accent);color:var(--bg);
-        border:1px solid rgba(0,0,0,.06);
-        box-shadow:var(--shadow);
-        font-weight:650;
+
+      .wrap {
+        max-width: 1020px;
+        margin: 0 auto;
+        padding: 28px 18px;
       }
-      .btn.ghost{
-        background:transparent;color:var(--ink);
-        border:1px solid var(--line);
-        box-shadow:none;
+
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding-top: 18px;
+        padding-bottom: 10px;
       }
-      .metrics{
-        display:grid;gap:12px;
-        grid-template-columns: repeat(3, minmax(0,1fr));
-        margin-top:10px;
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
       }
-      .metric{
-        background:var(--card);
-        border:1px solid var(--line);
-        border-radius:var(--radius);
-        padding:14px 14px 12px;
-        box-shadow:var(--shadow);
+
+      .mark {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        background: var(--accent);
+        color: var(--bg);
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        box-shadow: var(--shadow);
       }
-      .metric .label{font-size:.8rem;color:var(--muted)}
-      .metric .value{font-size:1.25rem;font-weight:800;margin-top:4px}
-      .metric .hint{font-size:.82rem;color:var(--muted);margin-top:6px}
-      .grid{
-        display:grid;gap:14px;
-        grid-template-columns: repeat(2, minmax(0,1fr));
-        margin-top:18px;
+
+      .nav {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
       }
-      .card{
-        background:var(--card);
-        border:1px solid var(--line);
-        border-radius:var(--radius);
-        padding:18px;
-        box-shadow:var(--shadow);
+      .nav a {
+        padding: 8px 10px;
+        border-radius: 12px;
+        transition: background-color 600ms ease;
       }
-      .card h2{margin:0 0 8px;font-size:1.2rem}
-      .card h3{margin:0 0 6px;font-size:1.05rem}
-      .muted{color:var(--muted)}
-      .list{margin:10px 0 0;padding-left:18px;color:var(--muted)}
-      .list strong{color:var(--ink)}
-      .section{margin-top:26px}
-      .sectionhead{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
-      .sectionhead h2{margin:0;font-size:1.3rem}
-      .cards{
-        display:grid;gap:14px;margin-top:12px;
-        grid-template-columns: repeat(3, minmax(0,1fr));
+      .nav a:hover {
+        background: rgba(0, 0, 0, 0.04);
       }
-      .linkcard{transition:transform .12s ease, box-shadow .12s ease}
-      .linkcard:hover{transform:translateY(-2px)}
-      .tag{
-        display:inline-block;margin-top:10px;
-        padding:6px 10px;border-radius:999px;
-        border:1px solid var(--line);
-        color:var(--muted);font-size:.8rem;
-        background:rgba(255,255,255,.35);
+
+      .hero {
+        padding: 28px 0 12px;
       }
-      .footer{margin:30px 0 10px}
-      .contactline{margin:8px 0}
-      @media (max-width: 840px){
-        .metrics{grid-template-columns:1fr}
-        .grid{grid-template-columns:1fr}
-        .cards{grid-template-columns:1fr}
+      .kicker {
+        margin: 0 0 10px;
+        color: var(--muted);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-size: 0.78rem;
+      }
+      h1 {
+        margin: 0 0 10px;
+        font-size: clamp(2rem, 4vw, 3rem);
+        line-height: 1.08;
+      }
+      .lede {
+        margin: 0;
+        max-width: 68ch;
+        color: var(--muted);
+        font-size: 1.05rem;
+      }
+
+      .cta {
+        display: flex;
+        gap: 12px;
+        margin: 18px 0 18px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 14px;
+        border-radius: 14px;
+        background: var(--accent);
+        color: var(--bg);
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        box-shadow: var(--shadow);
+        font-weight: 650;
+      }
+
+      .btn.ghost {
+        background: transparent;
+        color: var(--ink);
+        border: 1px solid var(--line);
+        box-shadow: none;
+      }
+
+      .metrics {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        margin-top: 10px;
+      }
+
+      .metric {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 14px 14px 12px;
+        box-shadow: var(--shadow);
+      }
+
+      .metric .label {
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+      .metric .value {
+        font-size: 1.25rem;
+        font-weight: 800;
+        margin-top: 4px;
+      }
+      .metric .hint {
+        font-size: 0.82rem;
+        color: var(--muted);
+        margin-top: 6px;
+      }
+
+      .grid {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        margin-top: 18px;
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 18px;
+        box-shadow: var(--shadow);
+
+        transition: background-color 900ms ease, color 900ms ease, border-color 900ms ease,
+          box-shadow 900ms ease;
+      }
+
+      .metric,
+      .mark,
+      .btn {
+        transition: background-color 900ms ease, color 900ms ease, border-color 900ms ease,
+          box-shadow 900ms ease;
+      }
+
+      .card h2 {
+        margin: 0 0 8px;
+        font-size: 1.2rem;
+      }
+      .card h3 {
+        margin: 0 0 6px;
+        font-size: 1.05rem;
+      }
+
+      .muted {
+        color: var(--muted);
+      }
+
+      .list {
+        margin: 10px 0 0;
+        padding-left: 18px;
+        color: var(--muted);
+      }
+      .list strong {
+        color: var(--ink);
+      }
+
+      .section {
+        margin-top: 26px;
+      }
+      .sectionhead {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .sectionhead h2 {
+        margin: 0;
+        font-size: 1.3rem;
+      }
+
+      .cards {
+        display: grid;
+        gap: 14px;
+        margin-top: 12px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .linkcard {
+        transition: transform 120ms ease, box-shadow 120ms ease, background-color 900ms ease,
+          border-color 900ms ease;
+      }
+      .linkcard:hover {
+        transform: translateY(-2px);
+      }
+
+      .tag {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 0.8rem;
+        background: rgba(255, 255, 255, 0.35);
+        transition: background-color 900ms ease, border-color 900ms ease, color 900ms ease;
+      }
+
+      .footer {
+        margin: 30px 0 10px;
+      }
+
+      .contactline {
+        margin: 8px 0;
+      }
+
+      @media (max-width: 840px) {
+        .metrics {
+          grid-template-columns: 1fr;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .cards {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
@@ -142,7 +318,7 @@ const posts = [
     <header class="wrap header">
       <a class="brand" href="/">
         <span class="mark" aria-hidden="true">JW</span>
-        <span style="font-weight:700">Jack Wormgoor</span>
+        <span style="font-weight: 700">Jack Wormgoor</span>
       </a>
 
       <nav class="nav" aria-label="Primary">
@@ -157,8 +333,8 @@ const posts = [
         <p class="kicker">jackwormgoor.com</p>
         <h1>Builder. Experimenter. Problem solver.</h1>
         <p class="lede">
-          I build practical things and odd things — sometimes both at once. This is my corner of the
-          internet for projects, notes, and whatever I’m testing lately.
+          I build practical things and odd things — sometimes both at once. This is my corner of the internet for
+          projects, notes, and whatever I’m testing lately.
         </p>
 
         <div class="cta">
@@ -168,7 +344,7 @@ const posts = [
 
         <div class="metrics" aria-label="Live dashboard">
           {metrics.map((m) => (
-            <div class="metric">
+            <div class="metric" data-key={m.key}>
               <div class="label">{m.label}</div>
               <div class="value">{m.value}</div>
               <div class="hint">{m.hint}</div>
@@ -181,9 +357,8 @@ const posts = [
         <article class="card">
           <h2>About</h2>
           <p>
-            I like building systems that feel real — from workshop projects to software to field
-            experiments. I’m into practical engineering, playful problem-solving, and documenting
-            the process.
+            I like building systems that feel real — from workshop projects to software to field experiments. I’m into
+            practical engineering, playful problem-solving, and documenting the process.
           </p>
           <p class="muted">Based in the UK. Usually covered in sawdust or tabs.</p>
         </article>
@@ -253,22 +428,106 @@ const posts = [
     </main>
 
     <script>
-      // Local time widget (no API)
-      const metricCards = Array.from(document.querySelectorAll(".metric"));
-      const timeCard = metricCards.find((el) =>
-        el.querySelector(".label")?.textContent?.includes("Local time")
-      );
-      if (timeCard) {
-        const valueEl = timeCard.querySelector(".value");
-        const hintEl = timeCard.querySelector(".hint");
+      // Helpers
+      const pad2 = (n) => String(n).padStart(2, "0");
+      const fmtTime = (d) => `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+
+      const getCard = (key) => document.querySelector(`.metric[data-key="${key}"]`);
+
+      const setCard = (key, { value, hint }) => {
+        const card = getCard(key);
+        if (!card) return;
+        if (value !== undefined) card.querySelector(".value").textContent = value;
+        if (hint !== undefined) card.querySelector(".hint").textContent = hint;
+      };
+
+      // 1) Local time widget (no API)
+      (() => {
         const tick = () => {
           const d = new Date();
-          valueEl.textContent = d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-          hintEl.textContent = d.toLocaleDateString([], { weekday: "short", day: "2-digit", month: "short" });
+          setCard("time", {
+            value: d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+            hint: d.toLocaleDateString([], { weekday: "short", day: "2-digit", month: "short" }),
+          });
         };
         tick();
         setInterval(tick, 15000);
+      })();
+
+      // 2) Sunrise / Sunset + theme switching
+      async function fetchSunTimes(lat, lng) {
+        const url = `https://api.sunrise-sunset.org/json?lat=${lat}&lng=${lng}&formatted=0`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Sun API failed");
+        const data = await res.json();
+        if (data.status !== "OK") throw new Error("Sun API not OK");
+        return {
+          sunrise: new Date(data.results.sunrise),
+          sunset: new Date(data.results.sunset),
+        };
       }
+
+      function applyThemeFromSun(sunrise, sunset) {
+        const now = new Date();
+        const isDay = now >= sunrise && now < sunset;
+        document.documentElement.dataset.theme = isDay ? "light" : "dark";
+        setCard("mode", { value: isDay ? "Day" : "Night" });
+      }
+
+      function scheduleNextSwitch(sunrise, sunset) {
+        const now = new Date();
+        let next = null;
+
+        if (now < sunrise) next = sunrise;
+        else if (now < sunset) next = sunset;
+        else next = null;
+
+        if (!next) return;
+
+        const ms = next.getTime() - now.getTime();
+        setTimeout(() => {
+          applyThemeFromSun(sunrise, sunset);
+        }, Math.max(5000, ms + 5000));
+      }
+
+      async function initSunAndTheme() {
+        // Fallback location: Salisbury, UK
+        const fallback = { lat: 51.0688, lng: -1.7945 };
+
+        // Try browser geolocation (optional)
+        const position = await new Promise((resolve) => {
+          if (!navigator.geolocation) return resolve(null);
+          navigator.geolocation.getCurrentPosition(
+            (pos) => resolve(pos),
+            () => resolve(null),
+            { enableHighAccuracy: false, timeout: 4000, maximumAge: 3600000 }
+          );
+        });
+
+        const lat = position?.coords?.latitude ?? fallback.lat;
+        const lng = position?.coords?.longitude ?? fallback.lng;
+
+        try {
+          setCard("sun", { value: "Loading…", hint: "Fetching sunrise/sunset…" });
+
+          const { sunrise, sunset } = await fetchSunTimes(lat, lng);
+
+          setCard("sun", {
+            value: `${fmtTime(sunrise)} ↑  ${fmtTime(sunset)} ↓`,
+            hint: "Updates daily • based on your location",
+          });
+
+          applyThemeFromSun(sunrise, sunset);
+          scheduleNextSwitch(sunrise, sunset);
+
+          // Refresh every 4 hours (simple + reliable)
+          setTimeout(() => initSunAndTheme(), 4 * 60 * 60 * 1000);
+        } catch (e) {
+          setCard("sun", { value: "Unavailable", hint: "Couldn’t fetch sun times" });
+        }
+      }
+
+      initSunAndTheme();
     </script>
   </body>
 </html>
