@@ -7,6 +7,9 @@ const TROLLEY_VIDEO = "https://www.youtube.com/watch?v=jKCOE1u_Zvs";
 const metrics = [
   { key: "time", label: "Local time (UK)", value: "—", hint: "Updates automatically" },
   { key: "sun", label: "Sunrise / Sunset", value: "Loading…", hint: "sunrise-sunset.org API" },
+  { key: "daylight", label: "Daylight", value: "—", hint: "Calculated from sun times" },
+  { key: "weather", label: "Weather", value: "Loading…", hint: "Open-Meteo (no key)" },
+  { key: "carbon", label: "Grid carbon", value: "Loading…", hint: "UK Carbon Intensity" },
   { key: "mode", label: "Theme", value: "Auto", hint: "Day / Golden / Night" },
 ];
 
@@ -119,7 +122,7 @@ const posts = [
       }
 
       a { color: inherit; text-decoration: none; }
-      a:hover { opacity: 0.92; }
+      a:hover { opacity: 0.94; }
 
       .wrap { max-width: 1020px; margin: 0 auto; padding: 28px 18px; }
 
@@ -160,8 +163,9 @@ const posts = [
         border: 1px solid rgba(0, 0, 0, 0.06);
         box-shadow: var(--shadow);
         font-weight: 650;
-        transition: background-color 900ms ease, color 900ms ease, border-color 900ms ease, box-shadow 900ms ease;
+        transition: transform 220ms ease, background-color 900ms ease, color 900ms ease, border-color 900ms ease, box-shadow 900ms ease;
       }
+      .btn:hover { transform: translateY(-1px); }
 
       .btn.ghost {
         background: transparent; color: var(--ink);
@@ -169,9 +173,11 @@ const posts = [
         box-shadow: none;
       }
 
+      /* Responsive metric grid (auto fit) */
       .metrics {
-        display: grid; gap: 12px;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
         margin-top: 10px;
       }
 
@@ -180,13 +186,16 @@ const posts = [
         border: 1px solid var(--line);
         border-radius: var(--radius);
         box-shadow: var(--shadow);
-        transition: background-color 900ms ease, color 900ms ease, border-color 900ms ease, box-shadow 900ms ease;
+        transition: transform 220ms ease, background-color 900ms ease, color 900ms ease, border-color 900ms ease, box-shadow 900ms ease;
       }
 
       .metric { padding: 14px 14px 12px; }
       .metric .label { font-size: 0.8rem; color: var(--muted); }
       .metric .value { font-size: 1.25rem; font-weight: 800; margin-top: 4px; }
       .metric .hint { font-size: 0.82rem; color: var(--muted); margin-top: 6px; }
+
+      /* Premium: hover lift */
+      .card:hover, .metric:hover { transform: translateY(-2px); }
 
       .grid {
         display: grid; gap: 14px;
@@ -197,6 +206,7 @@ const posts = [
       .card { padding: 18px; }
       .card h2 { margin: 0 0 8px; font-size: 1.2rem; }
       .card h3 { margin: 0 0 6px; font-size: 1.05rem; }
+
       .muted { color: var(--muted); }
 
       .section { margin-top: 26px; }
@@ -217,7 +227,7 @@ const posts = [
         align-items: stretch;
       }
 
-      /* Cards grid (selected projects + writing) */
+      /* Cards grid */
       .cards {
         display: grid; gap: 14px; margin-top: 12px;
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -226,7 +236,7 @@ const posts = [
       /* Project card */
       .project { padding: 0; overflow: hidden; }
 
-      /* Image container with graceful fallback (prevents broken icon) */
+      /* Image container with graceful fallback */
       .media {
         position: relative;
         width: 100%;
@@ -270,8 +280,9 @@ const posts = [
         color: var(--ink);
         background: transparent;
         font-size: 0.9rem;
+        transition: transform 180ms ease, background-color 250ms ease;
       }
-      .actionLink:hover { background: rgba(127,127,127,0.12); }
+      .actionLink:hover { background: rgba(127,127,127,0.12); transform: translateY(-1px); }
 
       /* Progress bar */
       .progressWrap { margin-top: 12px; }
@@ -289,8 +300,20 @@ const posts = [
       }
       .fill {
         height: 100%;
+        width: 0%;
         background: var(--accent);
-        transition: width 900ms ease, background-color 900ms ease;
+        transition: width 1200ms cubic-bezier(.2,.8,.2,1), background-color 900ms ease;
+      }
+
+      /* Premium: reveal animations */
+      .reveal {
+        opacity: 0;
+        transform: translateY(8px);
+        transition: opacity 700ms ease, transform 700ms ease;
+      }
+      .reveal.is-in {
+        opacity: 1;
+        transform: translateY(0);
       }
 
       .footer { margin: 30px 0 10px; }
@@ -301,15 +324,21 @@ const posts = [
       }
 
       @media (max-width: 840px) {
-        .metrics { grid-template-columns: 1fr; }
         .grid { grid-template-columns: 1fr; }
         .cards { grid-template-columns: 1fr; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * { scroll-behavior: auto !important; }
+        .reveal { opacity: 1; transform: none; transition: none; }
+        .fill { transition: none; }
+        .btn, .card, .metric, .actionLink { transition: none; }
       }
     </style>
   </head>
 
   <body>
-    <header class="wrap header">
+    <header class="wrap header reveal">
       <a class="brand" href="/">
         <span class="mark" aria-hidden="true">JW</span>
         <span style="font-weight: 700">Jack Wormgoor</span>
@@ -323,7 +352,7 @@ const posts = [
     </header>
 
     <main class="wrap">
-      <section class="hero">
+      <section class="hero reveal">
         <p class="kicker">jackwormgoor.com</p>
         <h1>Builder. Experimenter. Problem solver.</h1>
         <p class="lede">
@@ -338,7 +367,7 @@ const posts = [
 
         <div class="metrics" aria-label="Live dashboard">
           {metrics.map((m) => (
-            <div class="metric" data-key={m.key}>
+            <div class="metric reveal" data-key={m.key}>
               <div class="label">{m.label}</div>
               <div class="value">{m.value}</div>
               <div class="hint">{m.hint}</div>
@@ -348,7 +377,7 @@ const posts = [
       </section>
 
       <section class="grid">
-        <article class="card">
+        <article class="card reveal">
           <h2>About</h2>
           <p>
             I build things, break things, and write down what I learn. I like systems that feel real — workshop builds,
@@ -357,7 +386,7 @@ const posts = [
           <p class="muted">Based in the UK. Usually covered in sawdust or tabs.</p>
         </article>
 
-        <article class="card">
+        <article class="card reveal">
           <h2>Now</h2>
           <p class="muted" style="margin: 0">
             Current focus: finishing the ride-on conversion and writing up a few completed builds.
@@ -365,15 +394,14 @@ const posts = [
         </article>
       </section>
 
-      <!-- Current project (separate featured row, like the original mockup) -->
       <section class="section" aria-label="Current project">
-        <div class="sectionhead">
+        <div class="sectionhead reveal">
           <h2>Current project</h2>
           <p class="muted">One thing I’m actively building right now.</p>
         </div>
 
         <div class="featured">
-          <article class="card">
+          <article class="card reveal">
             <h3 style="margin-top: 0">{currentProject.title}</h3>
             <p class="muted" style="margin-top: 6px">{currentProject.desc}</p>
 
@@ -388,7 +416,7 @@ const posts = [
                 <span>{currentProject.progress}%</span>
               </div>
               <div class="bar" aria-label={`Progress ${currentProject.progress}%`}>
-                <div class="fill" style={`width:${currentProject.progress}%`}></div>
+                <div class="fill progress-fill" data-progress={currentProject.progress}></div>
               </div>
             </div>
 
@@ -397,7 +425,7 @@ const posts = [
             </div>
           </article>
 
-          <article class="card project" style="padding:0;">
+          <article class="card project reveal" style="padding:0;">
             <div class="media" style="aspect-ratio: 16 / 10;">
               <img
                 class="thumb"
@@ -411,16 +439,15 @@ const posts = [
         </div>
       </section>
 
-      <!-- Selected projects (3-up grid) -->
       <section id="projects" class="section">
-        <div class="sectionhead">
+        <div class="sectionhead reveal">
           <h2>Selected projects</h2>
           <p class="muted">Completed builds + experiments. More write-ups coming.</p>
         </div>
 
         <div class="cards">
           {projects.map((p) => (
-            <article class="card project">
+            <article class="card project reveal">
               <div class="media">
                 <img
                   class="thumb"
@@ -461,14 +488,14 @@ const posts = [
       </section>
 
       <section id="writing" class="section">
-        <div class="sectionhead">
+        <div class="sectionhead reveal">
           <h2>Writing & ideas</h2>
           <p class="muted">Short notes, longer posts, and the occasional rant about glue.</p>
         </div>
 
         <div class="cards">
           {posts.map((p) => (
-            <a class="card" href="#">
+            <a class="card reveal" href="#">
               <h3 style="margin: 0 0 6px">{p.title}</h3>
               <p class="muted" style="margin: 0">{p.desc}</p>
               <span class="pill" style="margin-top: 10px; display: inline-flex">{p.tag}</span>
@@ -478,13 +505,13 @@ const posts = [
       </section>
 
       <section id="contact" class="section">
-        <div class="sectionhead">
+        <div class="sectionhead reveal">
           <h2>Contact</h2>
           <p class="muted">Pick your weapon.</p>
         </div>
 
         <div class="cards" style="grid-template-columns: 1fr;">
-          <div class="card">
+          <div class="card reveal">
             <p class="contactline"><strong>Email:</strong> <span class="muted">you@domain.com</span></p>
             <p class="contactline"><strong>GitHub:</strong> <span class="muted">github.com/JWormgoor</span></p>
             <p class="contactline">
@@ -495,18 +522,18 @@ const posts = [
         </div>
       </section>
 
-      <footer class="footer">
+      <footer class="footer reveal">
         <p class="muted">© {year} Jack Wormgoor. Built with Astro.</p>
       </footer>
     </main>
 
     <script>
-      // Helpers
+      // ---------- tiny helpers ----------
       const pad2 = (n) => String(n).padStart(2, "0");
       const fmtTime = (d) => `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+      const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
 
       const getCard = (key) => document.querySelector(`.metric[data-key="${key}"]`);
-
       const setCard = (key, { value, hint }) => {
         const card = getCard(key);
         if (!card) return;
@@ -514,7 +541,67 @@ const posts = [
         if (hint !== undefined) card.querySelector(".hint").textContent = hint;
       };
 
-      // 1) Local time widget
+      // ---------- Premium: reveal on scroll ----------
+      (() => {
+        const els = document.querySelectorAll(".reveal");
+        const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+
+        if (reduced || !("IntersectionObserver" in window)) {
+          els.forEach((el) => el.classList.add("is-in"));
+          return;
+        }
+
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                e.target.classList.add("is-in");
+                io.unobserve(e.target);
+              }
+            });
+          },
+          { threshold: 0.12 }
+        );
+
+        els.forEach((el) => io.observe(el));
+      })();
+
+      // ---------- Premium: animate progress bar when visible ----------
+      (() => {
+        const fill = document.querySelector(".progress-fill");
+        if (!fill) return;
+
+        const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+        const target = clamp(parseInt(fill.dataset.progress || "0", 10), 0, 100);
+
+        const run = () => {
+          // slight delay looks nicer
+          setTimeout(() => {
+            fill.style.width = target + "%";
+          }, 120);
+        };
+
+        if (reduced || !("IntersectionObserver" in window)) {
+          run();
+          return;
+        }
+
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                run();
+                io.disconnect();
+              }
+            });
+          },
+          { threshold: 0.35 }
+        );
+
+        io.observe(fill);
+      })();
+
+      // ---------- 1) Local time ----------
       (() => {
         const tick = () => {
           const d = new Date();
@@ -527,17 +614,50 @@ const posts = [
         setInterval(tick, 15000);
       })();
 
-      // 2) Sunrise / Sunset + theme switching (Day / Golden / Night)
+      // ---------- APIs ----------
       async function fetchSunTimes(lat, lng) {
         const url = `https://api.sunrise-sunset.org/json?lat=${lat}&lng=${lng}&formatted=0`;
         const res = await fetch(url);
         if (!res.ok) throw new Error("Sun API failed");
         const data = await res.json();
         if (data.status !== "OK") throw new Error("Sun API not OK");
+        return { sunrise: new Date(data.results.sunrise), sunset: new Date(data.results.sunset) };
+      }
+
+      async function fetchWeather(lat, lng) {
+        const url =
+          `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}` +
+          `&current_weather=true&timezone=auto`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Weather API failed");
+        const data = await res.json();
+        const cw = data.current_weather;
+        if (!cw) throw new Error("No current weather");
         return {
-          sunrise: new Date(data.results.sunrise),
-          sunset: new Date(data.results.sunset),
+          temp: cw.temperature,
+          wind: cw.windspeed,
+          windDir: cw.winddirection,
         };
+      }
+
+      async function fetchCarbonUK() {
+        const url = "https://api.carbonintensity.org.uk/intensity";
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Carbon API failed");
+        const data = await res.json();
+        const item = data?.data?.[0];
+        const intensity = item?.intensity;
+        if (!intensity) throw new Error("No carbon data");
+        return {
+          actual: intensity.actual,
+          forecast: intensity.forecast,
+        };
+      }
+
+      function minutesToHM(mins) {
+        const h = Math.floor(mins / 60);
+        const m = Math.round(mins % 60);
+        return `${h}h ${pad2(m)}m`;
       }
 
       function applyThemeFromSun(sunrise, sunset) {
@@ -593,7 +713,7 @@ const posts = [
         }, Math.max(5000, ms + 5000));
       }
 
-      async function initSunAndTheme() {
+      async function initEverything() {
         // Fallback location: Salisbury, UK
         const fallback = { lat: 51.0688, lng: -1.7945 };
 
@@ -609,6 +729,7 @@ const posts = [
         const lat = position?.coords?.latitude ?? fallback.lat;
         const lng = position?.coords?.longitude ?? fallback.lng;
 
+        // Sun + theme + daylight
         try {
           setCard("sun", { value: "Loading…", hint: "Fetching sunrise/sunset…" });
 
@@ -619,16 +740,50 @@ const posts = [
             hint: "Updates daily • based on your location",
           });
 
+          const daylightMins = (sunset.getTime() - sunrise.getTime()) / (60 * 1000);
+          setCard("daylight", {
+            value: minutesToHM(daylightMins),
+            hint: "Useful for planning chaos",
+          });
+
           applyThemeFromSun(sunrise, sunset);
           scheduleNextSwitch(sunrise, sunset);
-
-          setTimeout(() => initSunAndTheme(), 4 * 60 * 60 * 1000);
         } catch (e) {
           setCard("sun", { value: "Unavailable", hint: "Couldn’t fetch sun times" });
+          setCard("daylight", { value: "—", hint: "No sun data" });
         }
+
+        // Weather
+        try {
+          setCard("weather", { value: "Loading…", hint: "Fetching local weather…" });
+          const w = await fetchWeather(lat, lng);
+          setCard("weather", {
+            value: `${Math.round(w.temp)}°C`,
+            hint: `Wind ${Math.round(w.wind)} km/h`,
+          });
+        } catch (e) {
+          setCard("weather", { value: "Unavailable", hint: "Weather fetch failed" });
+        }
+
+        // Carbon
+        try {
+          setCard("carbon", { value: "Loading…", hint: "Fetching UK grid intensity…" });
+          const c = await fetchCarbonUK();
+          const val = c.actual ?? c.forecast;
+          const note = c.actual ? "Actual" : "Forecast";
+          setCard("carbon", {
+            value: `${val} gCO₂/kWh`,
+            hint: `${note} • (lower = cleaner)`,
+          });
+        } catch (e) {
+          setCard("carbon", { value: "Unavailable", hint: "Carbon fetch failed" });
+        }
+
+        // Refresh a few things periodically (lightweight)
+        setTimeout(() => initEverything(), 4 * 60 * 60 * 1000);
       }
 
-      initSunAndTheme();
+      initEverything();
     </script>
   </body>
 </html>
