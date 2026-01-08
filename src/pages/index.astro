@@ -2,6 +2,7 @@
 const year = new Date().getFullYear();
 
 const YOUTUBE_CHANNEL = "https://youtube.com/@jwormm?si=XgKqXQHFO98DQoAB";
+const TROLLEY_VIDEO = "https://www.youtube.com/watch?v=jKCOE1u_Zvs";
 
 const metrics = [
   { key: "time", label: "Local time (UK)", value: "—", hint: "Updates automatically" },
@@ -9,17 +10,17 @@ const metrics = [
   { key: "mode", label: "Theme", value: "Auto", hint: "Day / Golden / Night" },
 ];
 
+const currentProject = {
+  title: "Fiat 500 Ride-On Conversion",
+  desc: "Turning a kid’s ride-on into something far more ridiculous: upgraded controls, dash bits, and better drive feel.",
+  status: "In progress",
+  progress: 85,
+  img: "/projects/fiat-rideon.jpg",
+  alt: "Pink Fiat 500 ride-on toy car parked outdoors",
+  cta: { label: "See more (soon)", href: "#" },
+};
+
 const projects = [
-  {
-    title: "Fiat 500 Ride-On Conversion",
-    desc: "Turning a kid’s ride-on into something far more ridiculous: upgraded controls, dash bits, and better drive feel.",
-    tag: "Build",
-    status: "In progress",
-    progress: 85,
-    img: "/projects/fiat-rideon.jpg",
-    alt: "Pink Fiat 500 ride-on toy car parked outdoors",
-    links: [{ label: "Build log (soon)", href: "#" }],
-  },
   {
     title: "Shopping Trolley Drift Cart",
     desc: "A motorised drift trolley build — silly, fast enough, and surprisingly stable once dialled in.",
@@ -28,7 +29,7 @@ const projects = [
     img: "/projects/trolley-drift-cart.jpg",
     alt: "A modified shopping trolley turned into a drift cart in a car park",
     links: [
-      { label: "Watch on YouTube", href: "https://www.youtube.com/watch?v=jKCOE1u_Zvs" },
+      { label: "Watch on YouTube", href: TROLLEY_VIDEO },
       { label: "Details (soon)", href: "#" },
     ],
   },
@@ -196,38 +197,50 @@ const posts = [
       .card { padding: 18px; }
       .card h2 { margin: 0 0 8px; font-size: 1.2rem; }
       .card h3 { margin: 0 0 6px; font-size: 1.05rem; }
-
       .muted { color: var(--muted); }
-      .list { margin: 10px 0 0; padding-left: 18px; color: var(--muted); }
-      .list strong { color: var(--ink); }
 
       .section { margin-top: 26px; }
       .sectionhead {
         display: flex; align-items: flex-end; justify-content: space-between;
         gap: 16px; flex-wrap: wrap;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--line);
       }
       .sectionhead h2 { margin: 0; font-size: 1.3rem; }
 
-      /* Cards grid */
+      /* Featured current project row */
+      .featured {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 14px;
+        margin-top: 12px;
+        align-items: stretch;
+      }
+
+      /* Cards grid (selected projects + writing) */
       .cards {
         display: grid; gap: 14px; margin-top: 12px;
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
-      /* Project cards */
-      .project {
-        padding: 0;
-        overflow: hidden;
-      }
+      /* Project card */
+      .project { padding: 0; overflow: hidden; }
 
-      /* Standardised image: square crop, no squish */
-      .thumb {
+      /* Image container with graceful fallback (prevents broken icon) */
+      .media {
+        position: relative;
         width: 100%;
         aspect-ratio: 1 / 1;
+        background: linear-gradient(135deg, rgba(127,127,127,0.18), rgba(127,127,127,0.06));
+        border-bottom: 1px solid var(--line);
+        overflow: hidden;
+      }
+      .thumb {
+        width: 100%;
+        height: 100%;
         object-fit: cover;
         object-position: center;
         display: block;
-        border-bottom: 1px solid var(--line);
       }
 
       .projectBody { padding: 16px; }
@@ -243,14 +256,11 @@ const posts = [
         color: var(--muted);
         font-size: 0.78rem;
         background: rgba(255, 255, 255, 0.28);
-        transition: background-color 900ms ease, border-color 900ms ease, color 900ms ease;
         white-space: nowrap;
       }
-
       .pill.strong { color: var(--ink); }
 
       .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
-
       .actionLink {
         display: inline-flex;
         align-items: center;
@@ -261,11 +271,10 @@ const posts = [
         background: transparent;
         font-size: 0.9rem;
       }
-
       .actionLink:hover { background: rgba(127,127,127,0.12); }
 
       /* Progress bar */
-      .progressWrap { margin-top: 10px; }
+      .progressWrap { margin-top: 12px; }
       .progressTop {
         display:flex; justify-content: space-between; gap: 12px;
         font-size: 0.82rem; color: var(--muted);
@@ -280,13 +289,16 @@ const posts = [
       }
       .fill {
         height: 100%;
-        width: 0%;
         background: var(--accent);
         transition: width 900ms ease, background-color 900ms ease;
       }
 
       .footer { margin: 30px 0 10px; }
       .contactline { margin: 8px 0; }
+
+      @media (max-width: 900px) {
+        .featured { grid-template-columns: 1fr; }
+      }
 
       @media (max-width: 840px) {
         .metrics { grid-template-columns: 1fr; }
@@ -339,32 +351,85 @@ const posts = [
         <article class="card">
           <h2>About</h2>
           <p>
-            I like building systems that feel real — from workshop projects to software to field experiments. I’m into
-            practical engineering, playful problem-solving, and documenting the process.
+            I build things, break things, and write down what I learn. I like systems that feel real — workshop builds,
+            field experiments, and software when it helps.
           </p>
           <p class="muted">Based in the UK. Usually covered in sawdust or tabs.</p>
         </article>
 
         <article class="card">
           <h2>Now</h2>
-          <ul class="list">
-            <li><strong>Current focus:</strong> finishing the ride-on conversion + documenting builds.</li>
-            <li><strong>Next:</strong> add proper project pages (photos, parts list, lessons).</li>
-            <li><strong>Ongoing:</strong> radio experiments and “why not?” engineering.</li>
-          </ul>
+          <p class="muted" style="margin: 0">
+            Current focus: finishing the ride-on conversion and writing up a few completed builds.
+          </p>
         </article>
       </section>
 
+      <!-- Current project (separate featured row, like the original mockup) -->
+      <section class="section" aria-label="Current project">
+        <div class="sectionhead">
+          <h2>Current project</h2>
+          <p class="muted">One thing I’m actively building right now.</p>
+        </div>
+
+        <div class="featured">
+          <article class="card">
+            <h3 style="margin-top: 0">{currentProject.title}</h3>
+            <p class="muted" style="margin-top: 6px">{currentProject.desc}</p>
+
+            <div class="badgeRow">
+              <span class="pill strong">Build</span>
+              <span class="pill">{currentProject.status}</span>
+            </div>
+
+            <div class="progressWrap">
+              <div class="progressTop">
+                <span>Progress</span>
+                <span>{currentProject.progress}%</span>
+              </div>
+              <div class="bar" aria-label={`Progress ${currentProject.progress}%`}>
+                <div class="fill" style={`width:${currentProject.progress}%`}></div>
+              </div>
+            </div>
+
+            <div class="actions">
+              <a class="actionLink" href={currentProject.cta.href}>{currentProject.cta.label}</a>
+            </div>
+          </article>
+
+          <article class="card project" style="padding:0;">
+            <div class="media" style="aspect-ratio: 16 / 10;">
+              <img
+                class="thumb"
+                src={currentProject.img}
+                alt={currentProject.alt}
+                loading="lazy"
+                onerror="this.style.display='none';"
+              />
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Selected projects (3-up grid) -->
       <section id="projects" class="section">
         <div class="sectionhead">
           <h2>Selected projects</h2>
-          <p class="muted">Real builds, real experiments — updated as I go.</p>
+          <p class="muted">Completed builds + experiments. More write-ups coming.</p>
         </div>
 
         <div class="cards">
           {projects.map((p) => (
             <article class="card project">
-              {p.img ? <img class="thumb" src={p.img} alt={p.alt} loading="lazy" /> : null}
+              <div class="media">
+                <img
+                  class="thumb"
+                  src={p.img}
+                  alt={p.alt}
+                  loading="lazy"
+                  onerror="this.style.display='none';"
+                />
+              </div>
 
               <div class="projectBody">
                 <h3 style="margin: 0">{p.title}</h3>
@@ -374,18 +439,6 @@ const posts = [
                   <span class="pill strong">{p.tag}</span>
                   <span class="pill">{p.status}</span>
                 </div>
-
-                {typeof p.progress === "number" ? (
-                  <div class="progressWrap">
-                    <div class="progressTop">
-                      <span>Progress</span>
-                      <span>{p.progress}%</span>
-                    </div>
-                    <div class="bar" aria-label={`Progress ${p.progress}%`}>
-                      <div class="fill" style={`width:${p.progress}%`}></div>
-                    </div>
-                  </div>
-                ) : null}
 
                 {p.links?.length ? (
                   <div class="actions">
@@ -434,7 +487,10 @@ const posts = [
           <div class="card">
             <p class="contactline"><strong>Email:</strong> <span class="muted">you@domain.com</span></p>
             <p class="contactline"><strong>GitHub:</strong> <span class="muted">github.com/JWormgoor</span></p>
-            <p class="contactline"><strong>YouTube:</strong> <a class="muted" href={YOUTUBE_CHANNEL} target="_blank" rel="noreferrer">{YOUTUBE_CHANNEL}</a></p>
+            <p class="contactline">
+              <strong>YouTube:</strong>
+              <a class="muted" href={YOUTUBE_CHANNEL} target="_blank" rel="noreferrer">{YOUTUBE_CHANNEL}</a>
+            </p>
           </div>
         </div>
       </section>
