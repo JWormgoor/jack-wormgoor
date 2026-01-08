@@ -9,7 +9,9 @@ const metrics = [
   { key: "sun", label: "Sunrise / Sunset", value: "Loading…", hint: "sunrise-sunset.org API" },
   { key: "daylight", label: "Daylight", value: "—", hint: "Calculated from sun times" },
   { key: "weather", label: "Weather", value: "Loading…", hint: "Open-Meteo (no key)" },
-  { key: "carbon", label: "Grid carbon", value: "Loading…", hint: "UK Carbon Intensity" },
+  { key: "rain", label: "Rain chance", value: "Loading…", hint: "Next hour (approx)" },
+  { key: "moon", label: "Moon phase", value: "—", hint: "Calculated locally" },
+  { key: "iss", label: "ISS", value: "Loading…", hint: "Where it is right now" },
   { key: "mode", label: "Theme", value: "Auto", hint: "Day / Golden / Night" },
 ];
 
@@ -173,7 +175,6 @@ const posts = [
         box-shadow: none;
       }
 
-      /* Responsive metric grid (auto fit) */
       .metrics {
         display: grid;
         gap: 12px;
@@ -194,7 +195,6 @@ const posts = [
       .metric .value { font-size: 1.25rem; font-weight: 800; margin-top: 4px; }
       .metric .hint { font-size: 0.82rem; color: var(--muted); margin-top: 6px; }
 
-      /* Premium: hover lift */
       .card:hover, .metric:hover { transform: translateY(-2px); }
 
       .grid {
@@ -218,7 +218,6 @@ const posts = [
       }
       .sectionhead h2 { margin: 0; font-size: 1.3rem; }
 
-      /* Featured current project row */
       .featured {
         display: grid;
         grid-template-columns: 1.1fr 0.9fr;
@@ -227,16 +226,13 @@ const posts = [
         align-items: stretch;
       }
 
-      /* Cards grid */
       .cards {
         display: grid; gap: 14px; margin-top: 12px;
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
-      /* Project card */
       .project { padding: 0; overflow: hidden; }
 
-      /* Image container with graceful fallback */
       .media {
         position: relative;
         width: 100%;
@@ -284,7 +280,6 @@ const posts = [
       }
       .actionLink:hover { background: rgba(127,127,127,0.12); transform: translateY(-1px); }
 
-      /* Progress bar */
       .progressWrap { margin-top: 12px; }
       .progressTop {
         display:flex; justify-content: space-between; gap: 12px;
@@ -305,7 +300,6 @@ const posts = [
         transition: width 1200ms cubic-bezier(.2,.8,.2,1), background-color 900ms ease;
       }
 
-      /* Premium: reveal animations */
       .reveal {
         opacity: 0;
         transform: translateY(8px);
@@ -528,7 +522,7 @@ const posts = [
     </main>
 
     <script>
-      // ---------- tiny helpers ----------
+      // ---------- helpers ----------
       const pad2 = (n) => String(n).padStart(2, "0");
       const fmtTime = (d) => `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
       const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
@@ -539,6 +533,15 @@ const posts = [
         if (!card) return;
         if (value !== undefined) card.querySelector(".value").textContent = value;
         if (hint !== undefined) card.querySelector(".hint").textContent = hint;
+      };
+
+      // Flag emoji from country code (e.g. "GB" -> 🇬🇧)
+      const flagFromCode = (code) => {
+        if (!code || code.length !== 2) return "";
+        const A = 0x1f1e6;
+        const base = "A".charCodeAt(0);
+        const chars = code.toUpperCase().split("").map(c => A + (c.charCodeAt(0) - base));
+        return String.fromCodePoint(...chars);
       };
 
       // ---------- Premium: reveal on scroll ----------
@@ -574,17 +577,9 @@ const posts = [
         const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
         const target = clamp(parseInt(fill.dataset.progress || "0", 10), 0, 100);
 
-        const run = () => {
-          // slight delay looks nicer
-          setTimeout(() => {
-            fill.style.width = target + "%";
-          }, 120);
-        };
+        const run = () => setTimeout(() => (fill.style.width = target + "%"), 120);
 
-        if (reduced || !("IntersectionObserver" in window)) {
-          run();
-          return;
-        }
+        if (reduced || !("IntersectionObserver" in window)) return run();
 
         const io = new IntersectionObserver(
           (entries) => {
@@ -614,6 +609,42 @@ const posts = [
         setInterval(tick, 15000);
       })();
 
+      // ---------- Moon phase (local calc, no API) ----------
+      // Returns 0..1 where 0=new, 0.5=full
+      function moonPhaseFraction(date = new Date()) {
+        // Simple approximation using known new moon reference + synodic month length
+        const synodicMonth = 29.530588853; // days
+        const knownNewMoon = Date.UTC(2000, 0, 6, 18, 14, 0); // 2000-01-06 18:14 UTC
+        const daysSince = (date.getTime() - knownNewMoon) / (1000 * 60 * 60 * 24);
+        const phase = (daysSince % synodicMonth) / synodicMonth;
+        return (phase + 1) % 1;
+      }
+
+      function moonEmojiAndName(frac) {
+        // Buckets (8 phases)
+        const idx = Math.floor(((frac + 1/16) % 1) * 8); // rotate slightly for nicer boundaries
+        const phases = [
+          { e: "🌑", n: "New" },
+          { e: "🌒", n: "Waxing crescent" },
+          { e: "🌓", n: "First quarter" },
+          { e: "🌔", n: "Waxing gibbous" },
+          { e: "🌕", n: "Full" },
+          { e: "🌖", n: "Waning gibbous" },
+          { e: "🌗", n: "Last quarter" },
+          { e: "🌘", n: "Waning crescent" },
+        ];
+        return phases[idx];
+      }
+
+      function setMoon() {
+        const frac = moonPhaseFraction(new Date());
+        const { e, n } = moonEmojiAndName(frac);
+        const pct = Math.round(frac * 100);
+        setCard("moon", { value: `${e} ${n}`, hint: `Phase: ${pct}% through cycle` });
+      }
+      setMoon();
+      setInterval(setMoon, 6 * 60 * 60 * 1000); // update a few times a day
+
       // ---------- APIs ----------
       async function fetchSunTimes(lat, lng) {
         const url = `https://api.sunrise-sunset.org/json?lat=${lat}&lng=${lng}&formatted=0`;
@@ -624,33 +655,63 @@ const posts = [
         return { sunrise: new Date(data.results.sunrise), sunset: new Date(data.results.sunset) };
       }
 
-      async function fetchWeather(lat, lng) {
+      async function fetchWeatherAndRain(lat, lng) {
         const url =
           `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}` +
-          `&current_weather=true&timezone=auto`;
+          `&current_weather=true&hourly=precipitation_probability,precipitation&timezone=auto`;
         const res = await fetch(url);
         if (!res.ok) throw new Error("Weather API failed");
         const data = await res.json();
+
         const cw = data.current_weather;
+        const times = data.hourly?.time || [];
+        const pop = data.hourly?.precipitation_probability || [];
+        const prc = data.hourly?.precipitation || [];
+
         if (!cw) throw new Error("No current weather");
+
+        // Find the closest hourly index to "now"
+        const now = new Date();
+        let bestIdx = 0;
+        let bestDiff = Infinity;
+        for (let i = 0; i < times.length; i++) {
+          const t = new Date(times[i]);
+          const diff = Math.abs(t.getTime() - now.getTime());
+          if (diff < bestDiff) { bestDiff = diff; bestIdx = i; }
+        }
+
+        // Next hour probability + precipitation (approx)
+        const nextIdx = Math.min(bestIdx + 1, pop.length - 1);
+        const rainChance = pop[nextIdx] ?? pop[bestIdx] ?? null;
+        const rainMm = prc[nextIdx] ?? prc[bestIdx] ?? null;
+
         return {
           temp: cw.temperature,
           wind: cw.windspeed,
-          windDir: cw.winddirection,
+          rainChance,
+          rainMm,
         };
       }
 
-      async function fetchCarbonUK() {
-        const url = "https://api.carbonintensity.org.uk/intensity";
+      async function fetchISS() {
+        const url = "https://api.wheretheiss.at/v1/satellites/25544";
         const res = await fetch(url);
-        if (!res.ok) throw new Error("Carbon API failed");
+        if (!res.ok) throw new Error("ISS API failed");
         const data = await res.json();
-        const item = data?.data?.[0];
-        const intensity = item?.intensity;
-        if (!intensity) throw new Error("No carbon data");
+        return { lat: data.latitude, lon: data.longitude, alt: data.altitude, vel: data.velocity };
+      }
+
+      async function reverseGeo(lat, lon) {
+        // BigDataCloud reverse geocode (no key)
+        const url = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Reverse geocode failed");
+        const data = await res.json();
         return {
-          actual: intensity.actual,
-          forecast: intensity.forecast,
+          countryName: data.countryName || "",
+          countryCode: data.countryCode || "",
+          locality: data.locality || data.city || "",
+          principal: data.principalSubdivision || "",
         };
       }
 
@@ -753,34 +814,62 @@ const posts = [
           setCard("daylight", { value: "—", hint: "No sun data" });
         }
 
-        // Weather
+        // Weather + Rain chance
         try {
           setCard("weather", { value: "Loading…", hint: "Fetching local weather…" });
-          const w = await fetchWeather(lat, lng);
+          setCard("rain", { value: "Loading…", hint: "Looking ahead…" });
+
+          const w = await fetchWeatherAndRain(lat, lng);
+
           setCard("weather", {
             value: `${Math.round(w.temp)}°C`,
             hint: `Wind ${Math.round(w.wind)} km/h`,
           });
+
+          const chance = (w.rainChance ?? null);
+          const mm = (w.rainMm ?? null);
+
+          if (chance === null) {
+            setCard("rain", { value: "—", hint: "No rain data" });
+          } else {
+            const mmText = (mm !== null && mm > 0) ? ` • ~${mm.toFixed(1)}mm` : "";
+            setCard("rain", {
+              value: `${Math.round(chance)}%`,
+              hint: `Next hour${mmText}`,
+            });
+          }
         } catch (e) {
           setCard("weather", { value: "Unavailable", hint: "Weather fetch failed" });
+          setCard("rain", { value: "Unavailable", hint: "Rain fetch failed" });
         }
 
-        // Carbon
+        // ISS + country/ocean + flag
         try {
-          setCard("carbon", { value: "Loading…", hint: "Fetching UK grid intensity…" });
-          const c = await fetchCarbonUK();
-          const val = c.actual ?? c.forecast;
-          const note = c.actual ? "Actual" : "Forecast";
-          setCard("carbon", {
-            value: `${val} gCO₂/kWh`,
-            hint: `${note} • (lower = cleaner)`,
-          });
+          setCard("iss", { value: "Loading…", hint: "Fetching ISS position…" });
+
+          const iss = await fetchISS();
+          let place = "Over ocean";
+          let extra = `Lat ${iss.lat.toFixed(2)}, Lon ${iss.lon.toFixed(2)}`;
+
+          try {
+            const geo = await reverseGeo(iss.lat, iss.lon);
+            if (geo.countryName) {
+              const flag = flagFromCode(geo.countryCode);
+              place = `Over: ${geo.countryName} ${flag}`.trim();
+              const regionBits = [geo.locality, geo.principal].filter(Boolean).join(", ");
+              extra = regionBits ? `${regionBits} • ${extra}` : extra;
+            }
+          } catch (_) {
+            // If reverse geocode fails, we still show coords.
+          }
+
+          setCard("iss", { value: place, hint: extra });
         } catch (e) {
-          setCard("carbon", { value: "Unavailable", hint: "Carbon fetch failed" });
+          setCard("iss", { value: "Unavailable", hint: "ISS fetch failed" });
         }
 
-        // Refresh a few things periodically (lightweight)
-        setTimeout(() => initEverything(), 4 * 60 * 60 * 1000);
+        // Refresh every 20 minutes (keeps ISS + rain “alive”)
+        setTimeout(() => initEverything(), 20 * 60 * 1000);
       }
 
       initEverything();
