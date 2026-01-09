@@ -13,58 +13,78 @@ const metrics = [
 
 const currentProject = {
   title: "Fiat 500 Ride-On Conversion",
-  desc: "Turning a kid’s ride-on into something far more ridiculous: upgraded controls, dash bits, and better drive feel.",
+  desc:
+    "Turning a kid’s ride-on into something far more ridiculous: better controls, a real dash feel, and a build that’s actually usable — not just a prop.",
   status: "In progress",
   progress: 85,
   img: "/projects/fiat-rideon.jpg",
   alt: "Pink Fiat 500 ride-on toy car parked outdoors",
-  cta: { label: "See more (soon)", href: "#" },
+  cta: { label: "Build notes (soon)", href: "#" },
 };
 
 const projects = [
   {
     title: "Shopping Trolley Drift Cart",
-    desc: "A motorised drift trolley build — silly, fast enough, and surprisingly stable once dialled in.",
-    tag: "Experiment",
+    desc:
+      "A motorised drift trolley build — lightweight, chaotic, and surprisingly controllable once dialled in. Filmed and published.",
+    tag: "Build + Video",
     status: "Completed",
     img: "/projects/trolley-drift-cart.jpg",
     alt: "A modified shopping trolley turned into a drift cart in a car park",
-    links: [
-      { label: "Watch on YouTube", href: TROLLEY_VIDEO },
-      { label: "Details (soon)", href: "#" },
-    ],
+    links: [{ label: "Watch on YouTube", href: TROLLEY_VIDEO }],
+    bullets: ["Problem: Make a cheap platform that can actually drift.", "Build: Reinforced frame + drive + control tweaks.", "Result: Working drift cart + video published."],
   },
   {
     title: "FM Emergency Broadcaster (≈7-mile range)",
-    desc: "Built from a car FM transmitter and upgraded into a longer-range local broadcast experiment for emergency-style messaging.",
-    tag: "Radio",
+    desc:
+      "Built from a car FM transmitter and upgraded into a longer-range local broadcast experiment for emergency-style messaging.",
+    tag: "Radio / RF",
     status: "Completed",
     img: "/projects/fm-emergency-broadcaster.jpg",
     alt: "An outdoor antenna mounted near a window at night",
-    links: [{ label: "How it works (soon)", href: "#" }],
+    links: [{ label: "Write-up (soon)", href: "#" }],
+    bullets: ["Problem: Low-cost broadcast for local alerts/experiments.", "Build: Transmitter + antenna + placement + tuning.", "Result: Near ~7 miles effective range."],
   },
   {
     title: "Flame Thrower Build",
-    desc: "A finished build project — one of those ‘because I can’ experiments, documented with care and restraint.",
-    tag: "Build",
+    desc:
+      "A finished build project — one of those ‘because I can’ experiments, documented with care and restraint.",
+    tag: "Workshop",
     status: "Completed",
     img: "/projects/flame-thrower.jpg",
     alt: "A flame thrower project photo",
     links: [{ label: "Write-up (soon)", href: "#" }],
+    bullets: ["Problem: Build a controlled effects tool.", "Build: Hardware + fuel delivery + ignition system.", "Result: Working unit + test footage captured."],
   },
 ];
 
 const posts = [
   {
     title: "Why I built this site",
-    desc: "A quick log of the build: Astro + Cloudflare Pages + live metrics.",
+    desc: "Astro + Cloudflare Pages + live metrics — because boring portfolios don’t deserve domains.",
     tag: "Log",
   },
   {
-    title: "Making a site that follows the sun",
-    desc: "Sunrise/sunset API + automatic day/golden/night themes.",
+    title: "Sun-following themes",
+    desc: "Automatic day / golden hour / night themes based on your sunrise & sunset.",
     tag: "Notes",
   },
+];
+
+const capabilities = [
+  { title: "Rapid prototyping", desc: "From idea → working thing. Fast iteration, practical choices.", icon: "⚙️" },
+  { title: "Workshop builds", desc: "Mechanical mods, fabrication, making parts behave.", icon: "🛠️" },
+  { title: "Electronics + wiring", desc: "Power, switching, controls, keeping it reliable.", icon: "🔌" },
+  { title: "Radio experiments", desc: "FM/RF experiments and “what if we…” communication tests.", icon: "📻" },
+  { title: "Web + automation", desc: "Astro, APIs, Cloudflare — clean, fast, self-hostable-ish.", icon: "🌐" },
+  { title: "Video documentation", desc: "I don’t just build — I film, explain, and ship the story.", icon: "🎥" },
+];
+
+const highlights = [
+  { k: "Range", v: "≈7 miles", d: "FM broadcaster experiment" },
+  { k: "Current build", v: "85%", d: "Fiat 500 ride-on conversion" },
+  { k: "Deployed", v: "Live APIs", d: "Sun / weather / moon dashboards" },
+  { k: "Channel", v: "@jwormm", d: "Build videos + experiments" },
 ];
 ---
 
@@ -122,7 +142,7 @@ const posts = [
       a { color: inherit; text-decoration: none; }
       a:hover { opacity: 0.94; }
 
-      .wrap { max-width: 1020px; margin: 0 auto; padding: 28px 18px; }
+      .wrap { max-width: 1080px; margin: 0 auto; padding: 28px 18px; }
 
       .header {
         display: flex; align-items: center; justify-content: space-between; gap: 18px;
@@ -145,14 +165,24 @@ const posts = [
       .nav a:hover { background: rgba(127, 127, 127, 0.16); }
 
       .hero { padding: 28px 0 12px; }
+
+      .heroTop {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 14px;
+        align-items: stretch;
+      }
+
       .kicker {
         margin: 0 0 10px; color: var(--muted);
         letter-spacing: 0.12em; text-transform: uppercase; font-size: 0.78rem;
       }
-      h1 { margin: 0 0 10px; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.08; }
-      .lede { margin: 0; max-width: 68ch; color: var(--muted); font-size: 1.05rem; }
 
-      .cta { display: flex; gap: 12px; margin: 18px 0; flex-wrap: wrap; }
+      h1 { margin: 0 0 10px; font-size: clamp(2rem, 4vw, 3.1rem); line-height: 1.06; }
+
+      .lede { margin: 0; max-width: 70ch; color: var(--muted); font-size: 1.06rem; }
+
+      .cta { display: flex; gap: 12px; margin: 18px 0 0; flex-wrap: wrap; }
 
       .btn {
         display: inline-flex; align-items: center; justify-content: center;
@@ -171,12 +201,49 @@ const posts = [
         box-shadow: none;
       }
 
-      /* Now: force exactly 4 cards on desktop, responsive on mobile */
+      /* Image slot that looks good even before you add real images */
+      .slot {
+        background: linear-gradient(135deg, rgba(127,127,127,0.18), rgba(127,127,127,0.06));
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 16px;
+        display: grid;
+        gap: 10px;
+        align-content: start;
+        transition: background-color 900ms ease, border-color 900ms ease, box-shadow 900ms ease;
+      }
+      .slot .slotTop {
+        display: flex; justify-content: space-between; align-items: center; gap: 10px;
+      }
+      .slot .tag {
+        font-size: 0.75rem;
+        border: 1px solid var(--line);
+        color: var(--muted);
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.25);
+        white-space: nowrap;
+      }
+      .slot .ph {
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        border-radius: 14px;
+        border: 1px dashed rgba(127,127,127,0.35);
+        display: grid;
+        place-items: center;
+        color: var(--muted);
+        font-size: 0.92rem;
+        padding: 10px;
+      }
+      .slot .ph small { display: block; opacity: 0.9; }
+
+      /* Metrics (4 cards) */
       .metrics {
         display: grid;
         gap: 12px;
         grid-template-columns: repeat(4, minmax(0, 1fr));
-        margin-top: 10px;
+        margin-top: 14px;
       }
 
       .metric, .card {
@@ -201,18 +268,7 @@ const posts = [
       }
       .themeLine strong { color: var(--ink); }
 
-      .grid {
-        display: grid; gap: 14px;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        margin-top: 18px;
-      }
-
-      .card { padding: 18px; }
-      .card h2 { margin: 0 0 8px; font-size: 1.2rem; }
-      .card h3 { margin: 0 0 6px; font-size: 1.05rem; }
-
-      .muted { color: var(--muted); }
-
+      /* Sections */
       .section { margin-top: 26px; }
       .sectionhead {
         display: flex; align-items: flex-end; justify-content: space-between;
@@ -221,7 +277,74 @@ const posts = [
         border-bottom: 1px solid var(--line);
       }
       .sectionhead h2 { margin: 0; font-size: 1.3rem; }
+      .muted { color: var(--muted); }
 
+      /* Value strip */
+      .valueStrip {
+        margin-top: 18px;
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 14px;
+        align-items: stretch;
+      }
+      .valueStrip .card { padding: 18px; }
+      .proof {
+        display: grid;
+        gap: 10px;
+        padding: 18px;
+      }
+      .proofRow {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 12px;
+        border-radius: 14px;
+        border: 1px solid var(--line);
+        background: rgba(255,255,255,0.25);
+      }
+      .proofRow span { color: var(--muted); }
+      .proofRow strong { font-weight: 750; }
+
+      /* Highlights */
+      .highlights {
+        margin-top: 12px;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .mini {
+        padding: 14px;
+      }
+      .mini .k { color: var(--muted); font-size: 0.8rem; }
+      .mini .v { font-weight: 850; font-size: 1.15rem; margin-top: 4px; }
+      .mini .d { color: var(--muted); font-size: 0.82rem; margin-top: 6px; }
+
+      /* Capabilities */
+      .caps {
+        margin-top: 12px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+      .cap {
+        padding: 16px;
+        display: grid;
+        gap: 8px;
+        align-content: start;
+      }
+      .capTop { display: flex; gap: 10px; align-items: center; }
+      .capIcon {
+        width: 38px; height: 38px;
+        border-radius: 14px;
+        display: grid; place-items: center;
+        border: 1px solid var(--line);
+        background: rgba(255,255,255,0.25);
+        font-size: 1.1rem;
+      }
+      .cap h3 { margin: 0; font-size: 1.02rem; }
+      .cap p { margin: 0; color: var(--muted); }
+
+      /* Current project */
       .featured {
         display: grid;
         grid-template-columns: 1.1fr 0.9fr;
@@ -229,60 +352,6 @@ const posts = [
         margin-top: 12px;
         align-items: stretch;
       }
-
-      .cards {
-        display: grid; gap: 14px; margin-top: 12px;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-
-      .project { padding: 0; overflow: hidden; }
-
-      .media {
-        position: relative;
-        width: 100%;
-        aspect-ratio: 1 / 1;
-        background: linear-gradient(135deg, rgba(127,127,127,0.18), rgba(127,127,127,0.06));
-        border-bottom: 1px solid var(--line);
-        overflow: hidden;
-      }
-      .thumb {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center;
-        display: block;
-      }
-
-      .projectBody { padding: 16px; }
-
-      .badgeRow { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
-
-      .pill {
-        display: inline-flex;
-        align-items: center;
-        padding: 6px 10px;
-        border-radius: 999px;
-        border: 1px solid var(--line);
-        color: var(--muted);
-        font-size: 0.78rem;
-        background: rgba(255, 255, 255, 0.28);
-        white-space: nowrap;
-      }
-      .pill.strong { color: var(--ink); }
-
-      .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
-      .actionLink {
-        display: inline-flex;
-        align-items: center;
-        padding: 8px 10px;
-        border-radius: 12px;
-        border: 1px solid var(--line);
-        color: var(--ink);
-        background: transparent;
-        font-size: 0.9rem;
-        transition: transform 180ms ease, background-color 250ms ease;
-      }
-      .actionLink:hover { background: rgba(127,127,127,0.12); transform: translateY(-1px); }
 
       .progressWrap { margin-top: 12px; }
       .progressTop {
@@ -304,6 +373,64 @@ const posts = [
         transition: width 1200ms cubic-bezier(.2,.8,.2,1), background-color 900ms ease;
       }
 
+      /* Project cards */
+      .cards {
+        display: grid; gap: 14px; margin-top: 12px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .project { padding: 0; overflow: hidden; }
+
+      .media {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        background: linear-gradient(135deg, rgba(127,127,127,0.18), rgba(127,127,127,0.06));
+        border-bottom: 1px solid var(--line);
+        overflow: hidden;
+      }
+      .thumb {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+      }
+      .projectBody { padding: 16px; }
+      .badgeRow { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 0.78rem;
+        background: rgba(255, 255, 255, 0.28);
+        white-space: nowrap;
+      }
+      .pill.strong { color: var(--ink); }
+
+      .bullets { margin: 10px 0 0; padding-left: 16px; color: var(--muted); }
+      .bullets li { margin: 6px 0; }
+
+      .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+      .actionLink {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 10px;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        color: var(--ink);
+        background: transparent;
+        font-size: 0.9rem;
+        transition: transform 180ms ease, background-color 250ms ease;
+      }
+      .actionLink:hover { background: rgba(127,127,127,0.12); transform: translateY(-1px); }
+
+      .footer { margin: 30px 0 10px; }
+
+      /* Reveal animation */
       .reveal {
         opacity: 0;
         transform: translateY(8px);
@@ -314,24 +441,24 @@ const posts = [
         transform: translateY(0);
       }
 
-      .footer { margin: 30px 0 10px; }
-      .contactline { margin: 8px 0; }
+      /* Responsive */
+      @media (max-width: 980px) {
+        .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .highlights { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .valueStrip { grid-template-columns: 1fr; }
+        .heroTop { grid-template-columns: 1fr; }
+      }
 
       @media (max-width: 900px) {
         .featured { grid-template-columns: 1fr; }
-      }
-
-      @media (max-width: 980px) {
-        .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .caps { grid-template-columns: 1fr; }
       }
 
       @media (max-width: 840px) {
-        .grid { grid-template-columns: 1fr; }
         .cards { grid-template-columns: 1fr; }
       }
 
       @media (prefers-reduced-motion: reduce) {
-        * { scroll-behavior: auto !important; }
         .reveal { opacity: 1; transform: none; transition: none; }
         .fill { transition: none; }
         .btn, .card, .metric, .actionLink { transition: none; }
@@ -348,6 +475,7 @@ const posts = [
 
       <nav class="nav" aria-label="Primary">
         <a href="#projects">Projects</a>
+        <a href="#capabilities">Capabilities</a>
         <a href="#writing">Writing</a>
         <a href="#contact">Contact</a>
       </nav>
@@ -355,16 +483,34 @@ const posts = [
 
     <main class="wrap">
       <section class="hero reveal">
-        <p class="kicker">jackwormgoor.com</p>
-        <h1>Builder. Experimenter. Problem solver.</h1>
-        <p class="lede">
-          I build practical things and odd things — sometimes both at once. This is my corner of the internet for
-          projects, notes, and whatever I’m testing lately.
-        </p>
+        <div class="heroTop">
+          <div class="card" style="padding:18px;">
+            <p class="kicker">jackwormgoor.com</p>
+            <h1>Builder, experimenter, problem-solver.</h1>
+            <p class="lede">
+              I build real-world prototypes and the systems around them — workshop builds, radio experiments,
+              and clean web tools that feel alive.
+            </p>
 
-        <div class="cta">
-          <a class="btn" href="#projects">View projects</a>
-          <a class="btn ghost" href="#contact">Contact</a>
+            <div class="cta">
+              <a class="btn" href="#projects">See projects</a>
+              <a class="btn ghost" href={YOUTUBE_CHANNEL} target="_blank" rel="noreferrer">YouTube</a>
+            </div>
+          </div>
+
+          <aside class="slot">
+            <div class="slotTop">
+              <strong>Featured media</strong>
+              <span class="tag">Add an image later</span>
+            </div>
+            <div class="ph">
+              Drop in a workshop / build photo here
+              <small>Recommended: 1600×1000 (or any 16:10-ish)</small>
+            </div>
+            <p class="muted" style="margin:0;">
+              This box is deliberately “image-ready” but won’t break the site if you leave it empty.
+            </p>
+          </aside>
         </div>
 
         <div class="metrics" aria-label="Live dashboard">
@@ -380,24 +526,72 @@ const posts = [
         <div class="themeLine reveal">
           Theme: <strong id="themeLabel">Auto</strong> <span id="themeHint">—</span>
         </div>
+
+        <div class="valueStrip">
+          <article class="card reveal">
+            <h2 style="margin:0 0 8px;">What I do</h2>
+            <p class="muted" style="margin:0 0 10px;">
+              I like builds that are equal parts practical and ridiculous — but still engineered properly.
+              If it needs controls, power, reliability, a story, and a clean website to show it off… even better.
+            </p>
+            <p class="muted" style="margin:0;">
+              This site is part-portfolio, part live dashboard: sunrise/sunset themes, weather, moon phase — all pulled automatically.
+            </p>
+          </article>
+
+          <aside class="card proof reveal">
+            <h2 style="margin:0;">Proof & signal</h2>
+            <div class="proofRow">
+              <span>Projects</span><strong>Build + document</strong>
+            </div>
+            <div class="proofRow">
+              <span>Web</span><strong>Astro + Cloudflare</strong>
+            </div>
+            <div class="proofRow">
+              <span>APIs</span><strong>Live data + automation</strong>
+            </div>
+            <div class="proofRow">
+              <span>YouTube</span>
+              <a class="actionLink" href={YOUTUBE_CHANNEL} target="_blank" rel="noreferrer" style="padding:6px 10px;">@jwormm</a>
+            </div>
+          </aside>
+        </div>
       </section>
 
-      <section class="grid">
-        <article class="card reveal">
-          <h2>About</h2>
-          <p>
-            I build things, break things, and write down what I learn. I like systems that feel real — workshop builds,
-            field experiments, and software when it helps.
-          </p>
-          <p class="muted">Based in the UK. Usually covered in sawdust or tabs.</p>
-        </article>
+      <section class="section">
+        <div class="sectionhead reveal">
+          <h2>Highlights</h2>
+          <p class="muted">Quick signals — the stuff you’d scan on a CV.</p>
+        </div>
 
-        <article class="card reveal">
-          <h2>Now</h2>
-          <p class="muted" style="margin: 0">
-            Current focus: finishing the ride-on conversion and writing up a few completed builds.
-          </p>
-        </article>
+        <div class="highlights">
+          {highlights.map((h) => (
+            <div class="card mini reveal">
+              <div class="k">{h.k}</div>
+              <div class="v">{h.v}</div>
+              <div class="d">{h.d}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section id="capabilities" class="section">
+        <div class="sectionhead reveal">
+          <h2>Capabilities</h2>
+          <p class="muted">What I’m good at — and what I actually enjoy doing.</p>
+        </div>
+
+        <div class="caps">
+          {capabilities.map((c) => (
+            <div class="card cap reveal">
+              <div class="capTop">
+                <div class="capIcon" aria-hidden="true">{c.icon}</div>
+                <h3>{c.title}</h3>
+              </div>
+              <p>{c.desc}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
       <section class="section" aria-label="Current project">
@@ -407,7 +601,7 @@ const posts = [
         </div>
 
         <div class="featured">
-          <article class="card reveal">
+          <article class="card reveal" style="padding:18px;">
             <h3 style="margin-top: 0">{currentProject.title}</h3>
             <p class="muted" style="margin-top: 6px">{currentProject.desc}</p>
 
@@ -433,13 +627,7 @@ const posts = [
 
           <article class="card project reveal" style="padding:0;">
             <div class="media" style="aspect-ratio: 16 / 10;">
-              <img
-                class="thumb"
-                src={currentProject.img}
-                alt={currentProject.alt}
-                loading="lazy"
-                onerror="this.style.display='none';"
-              />
+              <img class="thumb" src={currentProject.img} alt={currentProject.alt} loading="lazy" onerror="this.style.display='none';" />
             </div>
           </article>
         </div>
@@ -448,20 +636,14 @@ const posts = [
       <section id="projects" class="section">
         <div class="sectionhead reveal">
           <h2>Selected projects</h2>
-          <p class="muted">Completed builds + experiments. More write-ups coming.</p>
+          <p class="muted">Builds + experiments. More write-ups coming.</p>
         </div>
 
         <div class="cards">
           {projects.map((p) => (
             <article class="card project reveal">
               <div class="media">
-                <img
-                  class="thumb"
-                  src={p.img}
-                  alt={p.alt}
-                  loading="lazy"
-                  onerror="this.style.display='none';"
-                />
+                <img class="thumb" src={p.img} alt={p.alt} loading="lazy" onerror="this.style.display='none';" />
               </div>
 
               <div class="projectBody">
@@ -472,6 +654,12 @@ const posts = [
                   <span class="pill strong">{p.tag}</span>
                   <span class="pill">{p.status}</span>
                 </div>
+
+                {p.bullets?.length ? (
+                  <ul class="bullets">
+                    {p.bullets.map((b) => <li>{b}</li>)}
+                  </ul>
+                ) : null}
 
                 {p.links?.length ? (
                   <div class="actions">
@@ -490,6 +678,39 @@ const posts = [
               </div>
             </article>
           ))}
+        </div>
+
+        <div class="section" style="margin-top: 18px;">
+          <div class="sectionhead reveal">
+            <h2>Media slots</h2>
+            <p class="muted">Optional: add 1–2 images here later (no pressure).</p>
+          </div>
+
+          <div class="valueStrip" style="margin-top: 12px;">
+            <aside class="slot reveal">
+              <div class="slotTop">
+                <strong>Workshop shot</strong>
+                <span class="tag">optional</span>
+              </div>
+              <div class="ph">
+                Add a “tools on table” / build in progress photo
+                <small>Helps it feel personal and real</small>
+              </div>
+              <p class="muted" style="margin:0;">Keep it genuine — not stock images.</p>
+            </aside>
+
+            <aside class="slot reveal">
+              <div class="slotTop">
+                <strong>Field test shot</strong>
+                <span class="tag">optional</span>
+              </div>
+              <div class="ph">
+                Add a “testing outdoors” photo
+                <small>Radio / vehicle / range / anything</small>
+              </div>
+              <p class="muted" style="margin:0;">One good image beats ten average ones.</p>
+            </aside>
+          </div>
         </div>
       </section>
 
@@ -513,16 +734,19 @@ const posts = [
       <section id="contact" class="section">
         <div class="sectionhead reveal">
           <h2>Contact</h2>
-          <p class="muted">Pick your weapon.</p>
+          <p class="muted">If you’ve got a project, collaboration, or a weird problem — I’m interested.</p>
         </div>
 
         <div class="cards" style="grid-template-columns: 1fr;">
-          <div class="card reveal">
-            <p class="contactline"><strong>Email:</strong> <span class="muted">you@domain.com</span></p>
-            <p class="contactline"><strong>GitHub:</strong> <span class="muted">github.com/JWormgoor</span></p>
-            <p class="contactline">
+          <div class="card reveal" style="padding:18px;">
+            <p style="margin:0 0 10px;" class="muted">
+              Tip: replace these placeholders with real links when you’re ready.
+            </p>
+            <p class="muted" style="margin: 8px 0;"><strong>Email:</strong> you@domain.com</p>
+            <p class="muted" style="margin: 8px 0;"><strong>GitHub:</strong> github.com/JWormgoor</p>
+            <p class="muted" style="margin: 8px 0;">
               <strong>YouTube:</strong>
-              <a class="muted" href={YOUTUBE_CHANNEL} target="_blank" rel="noreferrer">{YOUTUBE_CHANNEL}</a>
+              <a href={YOUTUBE_CHANNEL} target="_blank" rel="noreferrer">{YOUTUBE_CHANNEL}</a>
             </p>
           </div>
         </div>
@@ -539,7 +763,7 @@ const posts = [
       const fmtTime = (d) => `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
       const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
 
-      const getCard = (key) => document.querySelector(`.metric[data-key="${key}"]`);
+      const getCard = (key) => document.querySelector(\`.metric[data-key="\${key}"]\`);
       const setCard = (key, { value, hint }) => {
         const card = getCard(key);
         if (!card) return;
@@ -551,7 +775,7 @@ const posts = [
         const el = document.getElementById("themeLabel");
         const h = document.getElementById("themeHint");
         if (el) el.textContent = label;
-        if (h) h.textContent = hint ? `• ${hint}` : "";
+        if (h) h.textContent = hint ? \`• \${hint}\` : "—";
       };
 
       // ---------- Premium: reveal on scroll ----------
@@ -579,14 +803,13 @@ const posts = [
         els.forEach((el) => io.observe(el));
       })();
 
-      // ---------- Premium: animate progress bar when visible ----------
+      // ---------- Progress bar anim ----------
       (() => {
         const fill = document.querySelector(".progress-fill");
         if (!fill) return;
 
         const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
         const target = clamp(parseInt(fill.dataset.progress || "0", 10), 0, 100);
-
         const run = () => setTimeout(() => (fill.style.width = target + "%"), 120);
 
         if (reduced || !("IntersectionObserver" in window)) return run();
@@ -606,7 +829,7 @@ const posts = [
         io.observe(fill);
       })();
 
-      // ---------- 1) Local time ----------
+      // ---------- Local time ----------
       (() => {
         const tick = () => {
           const d = new Date();
@@ -772,12 +995,11 @@ const posts = [
         const lat = position?.coords?.latitude ?? fallback.lat;
         const lng = position?.coords?.longitude ?? fallback.lng;
 
-        // Sun + theme + daylight (daylight goes UNDER the sun hint)
+        // Sun + daylight in the same card
         try {
           setCard("sun", { value: "Loading…", hint: "Fetching sunrise/sunset…" });
 
           const { sunrise, sunset } = await fetchSunTimes(lat, lng);
-
           const daylightMins = (sunset.getTime() - sunrise.getTime()) / (60 * 1000);
           const daylight = minutesToHM(daylightMins);
 
@@ -793,7 +1015,7 @@ const posts = [
           setThemeText("Auto", "—");
         }
 
-        // Weather box combines temp + rain + wind
+        // Weather card: temp + rain + wind
         try {
           setCard("weather", { value: "Loading…", hint: "Fetching weather…" });
 
@@ -819,6 +1041,7 @@ const posts = [
           setCard("weather", { value: "Unavailable", hint: "Weather fetch failed" });
         }
 
+        // Refresh periodically
         setTimeout(() => initEverything(), 20 * 60 * 1000);
       }
 
