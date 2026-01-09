@@ -4,6 +4,7 @@ const year = new Date().getFullYear();
 const YOUTUBE_CHANNEL = "https://youtube.com/@jwormm?si=XgKqXQHFO98DQoAB";
 const TROLLEY_VIDEO = "https://www.youtube.com/watch?v=jKCOE1u_Zvs";
 
+// 4 dashboard cards
 const metrics = [
   { key: "time", label: "Local time (UK)", value: "—", hint: "Updates automatically" },
   { key: "sun", label: "Sunrise / Sunset", value: "Loading…", hint: "Fetching sun times…" },
@@ -14,7 +15,7 @@ const metrics = [
 const currentProject = {
   title: "Toy Fiat 500 to Petrol",
   desc:
-    "Taking a kid’s ride on car and giving it the power of two stroke: building a whole chassis, full electrics, breaks, even a buletooth CarPlay system. Not just a prop.",
+    "Taking a kid’s ride-on car and giving it the power of two-stroke: custom chassis, full electrics, brakes, and a clean control setup. Not just a prop — a proper build.",
   status: "In progress",
   progress: 85,
   img: "/projects/fiat-rideon.jpg",
@@ -32,42 +33,41 @@ const projects = [
     img: "/projects/trolley-drift-cart.jpg",
     alt: "A modified shopping trolley turned into a drift cart in a car park",
     links: [{ label: "Watch on YouTube", href: TROLLEY_VIDEO }],
-    bullets: ["Problem: Make a cheap platform that can actually drift.", "Build: Reinforced frame + drive + control tweaks.", "Result: Working drift cart + video published."],
+    bullets: [
+      "Problem: Make a cheap platform that can actually drift.",
+      "Build: Reinforced frame + drive + control tweaks.",
+      "Result: Working drift cart + video published.",
+    ],
   },
   {
     title: "FM Emergency Broadcaster (≈7-mile range)",
     desc:
-      "Built using a car FM transmitter and upgraded into a longer range local broadcast experiment for emergency style messaging, able to broadcast anything from music to speech.",
+      "Built using a car FM transmitter and upgraded into a longer-range local broadcast experiment for emergency-style messaging — able to broadcast speech, tones, and music.",
     tag: "Radio / RF",
     status: "Completed",
     img: "/projects/fm-emergency-broadcaster.jpg",
     alt: "An outdoor antenna mounted near a window at night",
     links: [{ label: "Write-up (soon)", href: "#" }],
-    bullets: ["Problem: Low cost broadcast for local alerts/experiments.", "Build: Transmitter + antenna + placement + tuning.", "Result: Near ~7 miles perfect effective range."],
+    bullets: [
+      "Problem: Low-cost broadcast for local alerts/experiments.",
+      "Build: Transmitter + antenna + placement + tuning.",
+      "Result: Near ~7 miles effective range in testing.",
+    ],
   },
   {
     title: "Flame Thrower Build",
     desc:
-      "A finished build project, a functioning flame thrower because I've always wanted one, documented with care and restraint.",
+      "A finished build project — one of those ‘because I can’ experiments, documented with care and restraint.",
     tag: "Build",
     status: "Completed",
     img: "/projects/flame-thrower.jpg",
     alt: "A flame thrower project photo",
     links: [{ label: "Write-up (soon)", href: "#" }],
-    bullets: ["Problem: Build a cool tool that shoots flames.", "Build: Hardware + fuel delivery + ignition system.", "Result: Working unit + test footage captured."],
-  },
-];
-
-const posts = [
-  {
-    title: "Why I built this site",
-    desc: "Astro + Cloudflare Pages + live metrics — because boring portfolios don’t deserve domains.",
-    tag: "Log",
-  },
-  {
-    title: "Sun-following themes",
-    desc: "Automatic day / golden hour / night themes based on your sunrise & sunset.",
-    tag: "Notes",
+    bullets: [
+      "Problem: Build a controlled flame tool for a project experiment.",
+      "Build: Hardware + fuel delivery + ignition system.",
+      "Result: Working unit + test footage captured.",
+    ],
   },
 ];
 
@@ -76,15 +76,15 @@ const capabilities = [
   { title: "Workshop builds", desc: "Mechanical mods, fabrication, making parts do what they need to do.", icon: "🛠️" },
   { title: "Electronics & wiring", desc: "Power, switching, controls, keeping it reliable.", icon: "🔌" },
   { title: "Radio experiments", desc: "FM/RF experiments and communication tests.", icon: "📻" },
-  { title: "Web & automation", desc: "Astro, APIs, Cloudflare, WordPress, Extended Diploma — clean, fast, self-hostable-ish.", icon: "🌐" },
-  { title: "Video documentation", desc: "I don’t just build — I film, explain, and put the story online.", icon: "🎥" },
+  { title: "Web & automation", desc: "Astro, APIs, Cloudflare — clean, fast, and maintainable.", icon: "🌐" },
+  { title: "Video documentation", desc: "I don’t just build — I film, explain, and publish the story.", icon: "🎥" },
 ];
 
 const highlights = [
-  { k: "Range", v: "≈7 miles", d: "FM broadcaster experiment" },
-  { k: "Current build", v: "85%", d: "Fiat 500 ride-on conversion" },
-  { k: "Deployed", v: "Live APIs", d: "Sun / weather / moon dashboards" },
-  { k: "Channel", v: "@jwormm", d: "Build videos + experiments" },
+  { k: "Problem solving", v: "Practical & methodical", d: "Break problems down, test ideas quickly, iterate until it works." },
+  { k: "Build mindset", v: "Real-world focused", d: "Designing things that survive use, not just look good on paper." },
+  { k: "Communication", v: "Clear & documented", d: "Explaining builds, decisions, and results clearly — on video and in writing." },
+  { k: "Reliability", v: "Consistent delivery", d: "Comfortable working independently or in teams, meeting deadlines and standards." },
 ];
 ---
 
@@ -201,7 +201,7 @@ const highlights = [
         box-shadow: none;
       }
 
-      /* Image slot that looks good even before you add real images */
+      /* Featured media slot */
       .slot {
         background: linear-gradient(135deg, rgba(127,127,127,0.18), rgba(127,127,127,0.06));
         border: 1px solid var(--line);
@@ -380,6 +380,7 @@ const highlights = [
       }
       .project { padding: 0; overflow: hidden; }
 
+      /* Standard square crop */
       .media {
         position: relative;
         width: 100%;
@@ -476,7 +477,6 @@ const highlights = [
       <nav class="nav" aria-label="Primary">
         <a href="#projects">Projects</a>
         <a href="#capabilities">Capabilities</a>
-        <a href="#writing">Writing</a>
         <a href="#contact">Contact</a>
       </nav>
     </header>
@@ -488,8 +488,8 @@ const highlights = [
             <p class="kicker">jackwormgoor.com</p>
             <h1>Builder, experimenter, problem-solver.</h1>
             <p class="lede">
-              I build real world prototypes and the systems around them — from builds in the workshop, radio experiments,
-              and web/development tools.
+              I build real-world prototypes and the systems around them — workshop builds, radio experiments,
+              and web tools that pull live data.
             </p>
 
             <div class="cta">
@@ -504,11 +504,11 @@ const highlights = [
               <span class="tag">Add an image later</span>
             </div>
             <div class="ph">
-              Finna add an image here soon
+              Add a strong “hero” image here
               <small>1600×1000 (or any 16:10-ish)</small>
             </div>
             <p class="muted" style="margin:0;">
-              Gonna put some words about the image once it's here.
+              One great image that shows the vibe (workshop / field test / build moment).
             </p>
           </aside>
         </div>
@@ -531,27 +531,39 @@ const highlights = [
           <article class="card reveal">
             <h2 style="margin:0 0 8px;">What I do</h2>
             <p class="muted" style="margin:0 0 10px;">
-              My name is Jack as you may have figured...
-              I like to create and design builds that are equal parts practical and ridiculous — but still engineered properly.
-              If it needs controls, power, a story, and a clean bit of documentation to show it off… perfect.
+              I design and build real-world systems — from mechanical workshop builds and radio experiments
+              to web tools that pull live data and react to the environment around them.
             </p>
             <p class="muted" style="margin:0;">
-              This site is part portfolio but part live dashboard: sunrise & sunset themes, weather, moon phase — all pulled automatically with APIs.
-              Constantly updating and adding to this website so stay tuned.
+              I enjoy projects that sit between disciplines: where hardware meets software, where ideas
+              have to survive real use, and where the solution needs to be practical, explainable, and reliable.
+              If something can be built, tested, documented, and improved — that’s where I work best.
             </p>
           </article>
 
           <aside class="card proof reveal">
             <h2 style="margin:0;">Skills & Abilities</h2>
+
             <div class="proofRow">
-              <span>Projects</span><strong>Building, Documenting, Problem Solving</strong>
+              <span>Core strengths</span>
+              <strong>Problem-solving • Planning • Attention to detail</strong>
             </div>
+
             <div class="proofRow">
-              <span>Coding</span><strong>Astro, APIs, HTML, CSS</strong>
+              <span>Working style</span>
+              <strong>Logical, hands-on, reliable under pressure</strong>
             </div>
+
             <div class="proofRow">
-              <span>APIs</span><strong>Live Data, Automation Pulled Onto Website</strong>
+              <span>Technical</span>
+              <strong>Mechanical builds, electronics, radio, web tooling</strong>
             </div>
+
+            <div class="proofRow">
+              <span>Documentation</span>
+              <strong>Clear written notes, diagrams, and video explanations</strong>
+            </div>
+
             <div class="proofRow">
               <span>YouTube</span>
               <a class="actionLink" href={YOUTUBE_CHANNEL} target="_blank" rel="noreferrer" style="padding:6px 10px;">@jwormm</a>
@@ -563,7 +575,7 @@ const highlights = [
       <section class="section">
         <div class="sectionhead reveal">
           <h2>Highlights</h2>
-          <p class="muted">A couple things that I do as an overview.</p>
+          <p class="muted">A quick snapshot of how I work.</p>
         </div>
 
         <div class="highlights">
@@ -681,56 +693,6 @@ const highlights = [
             </article>
           ))}
         </div>
-
-        <div class="section" style="margin-top: 18px;">
-          <div class="sectionhead reveal">
-            <h2>Media slots</h2>
-            <p class="muted">Optional: add 1–2 images here later (no pressure).</p>
-          </div>
-
-          <div class="valueStrip" style="margin-top: 12px;">
-            <aside class="slot reveal">
-              <div class="slotTop">
-                <strong>Workshop shot</strong>
-                <span class="tag">optional</span>
-              </div>
-              <div class="ph">
-                Add a “tools on table” / build in progress photo
-                <small>Helps it feel personal and real</small>
-              </div>
-              <p class="muted" style="margin:0;">Keep it genuine — not stock images.</p>
-            </aside>
-
-            <aside class="slot reveal">
-              <div class="slotTop">
-                <strong>Field test shot</strong>
-                <span class="tag">optional</span>
-              </div>
-              <div class="ph">
-                Add a “testing outdoors” photo
-                <small>Radio / vehicle / range / anything</small>
-              </div>
-              <p class="muted" style="margin:0;">One good image beats ten average ones.</p>
-            </aside>
-          </div>
-        </div>
-      </section>
-
-      <section id="writing" class="section">
-        <div class="sectionhead reveal">
-          <h2>Writing & ideas</h2>
-          <p class="muted">Short notes, longer posts, and the occasional rant about glue.</p>
-        </div>
-
-        <div class="cards">
-          {posts.map((p) => (
-            <a class="card reveal" href="#">
-              <h3 style="margin: 0 0 6px">{p.title}</h3>
-              <p class="muted" style="margin: 0">{p.desc}</p>
-              <span class="pill" style="margin-top: 10px; display: inline-flex">{p.tag}</span>
-            </a>
-          ))}
-        </div>
       </section>
 
       <section id="contact" class="section">
@@ -741,10 +703,9 @@ const highlights = [
 
         <div class="cards" style="grid-template-columns: 1fr;">
           <div class="card reveal" style="padding:18px;">
-            <p style="margin:0 0 10px;" class="muted">
-              Tip: replace these placeholders with real links when you’re ready.
+            <p class="muted" style="margin: 8px 0;">
+              <strong>Email:</strong> <a href="mailto:jackwormgoor@gmail.com">jackwormgoor@gmail.com</a>
             </p>
-            <p class="muted" style="margin: 8px 0;"><strong>Email:</strong> you@domain.com</p>
             <p class="muted" style="margin: 8px 0;"><strong>GitHub:</strong> github.com/JWormgoor</p>
             <p class="muted" style="margin: 8px 0;">
               <strong>YouTube:</strong>
@@ -760,301 +721,300 @@ const highlights = [
     </main>
 
     <script>
-  // ---------- helpers ----------
-  function pad2(n) { return String(n).padStart(2, "0"); }
-  function fmtTime(d) { return pad2(d.getHours()) + ":" + pad2(d.getMinutes()); }
-  function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
+      // ---------- helpers ----------
+      function pad2(n) { return String(n).padStart(2, "0"); }
+      function fmtTime(d) { return pad2(d.getHours()) + ":" + pad2(d.getMinutes()); }
+      function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
 
-  function getCard(key) {
-    return document.querySelector('.metric[data-key="' + key + '"]');
-  }
-
-  function setCard(key, obj) {
-    var card = getCard(key);
-    if (!card) return;
-    if (obj.value !== undefined) card.querySelector(".value").textContent = obj.value;
-    if (obj.hint !== undefined) card.querySelector(".hint").textContent = obj.hint;
-  }
-
-  function setThemeText(label, hint) {
-    var el = document.getElementById("themeLabel");
-    var h = document.getElementById("themeHint");
-    if (el) el.textContent = label;
-    if (h) h.textContent = hint ? "• " + hint : "—";
-  }
-
-  // ---------- Premium: reveal on scroll ----------
-  (function () {
-    var els = document.querySelectorAll(".reveal");
-    var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (reduced || !("IntersectionObserver" in window)) {
-      els.forEach(function (el) { el.classList.add("is-in"); });
-      return;
-    }
-
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) {
-          e.target.classList.add("is-in");
-          io.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.12 });
-
-    els.forEach(function (el) { io.observe(el); });
-  })();
-
-  // ---------- Progress bar anim ----------
-  (function () {
-    var fill = document.querySelector(".progress-fill");
-    if (!fill) return;
-
-    var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    var target = clamp(parseInt(fill.dataset.progress || "0", 10), 0, 100);
-
-    function run() {
-      setTimeout(function () {
-        fill.style.width = target + "%";
-      }, 120);
-    }
-
-    if (reduced || !("IntersectionObserver" in window)) return run();
-
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) {
-          run();
-          io.disconnect();
-        }
-      });
-    }, { threshold: 0.35 });
-
-    io.observe(fill);
-  })();
-
-  // ---------- Local time ----------
-  (function () {
-    function tick() {
-      var d = new Date();
-      setCard("time", {
-        value: d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        hint: d.toLocaleDateString([], { weekday: "short", day: "2-digit", month: "short" })
-      });
-    }
-    tick();
-    setInterval(tick, 15000);
-  })();
-
-  // ---------- Moon phase (local calc) ----------
-  function moonPhaseFraction(date) {
-    if (!date) date = new Date();
-    var synodicMonth = 29.530588853;
-    var knownNewMoon = Date.UTC(2000, 0, 6, 18, 14, 0);
-    var daysSince = (date.getTime() - knownNewMoon) / (1000 * 60 * 60 * 24);
-    var phase = (daysSince % synodicMonth) / synodicMonth;
-    return (phase + 1) % 1;
-  }
-
-  function moonEmojiAndName(frac) {
-    var idx = Math.floor(((frac + 1 / 16) % 1) * 8);
-    var phases = [
-      { e: "🌑", n: "New" },
-      { e: "🌒", n: "Waxing crescent" },
-      { e: "🌓", n: "First quarter" },
-      { e: "🌔", n: "Waxing gibbous" },
-      { e: "🌕", n: "Full" },
-      { e: "🌖", n: "Waning gibbous" },
-      { e: "🌗", n: "Last quarter" },
-      { e: "🌘", n: "Waning crescent" }
-    ];
-    return phases[idx];
-  }
-
-  function setMoon() {
-    var frac = moonPhaseFraction(new Date());
-    var p = moonEmojiAndName(frac);
-    var pct = Math.round(frac * 100);
-    setCard("moon", { value: p.e + " " + p.n, hint: "Phase: " + pct + "% through cycle" });
-  }
-  setMoon();
-  setInterval(setMoon, 6 * 60 * 60 * 1000);
-
-  // ---------- APIs ----------
-  async function fetchSunTimes(lat, lng) {
-    var url = "https://api.sunrise-sunset.org/json?lat=" + lat + "&lng=" + lng + "&formatted=0";
-    var res = await fetch(url);
-    if (!res.ok) throw new Error("Sun API failed");
-    var data = await res.json();
-    if (data.status !== "OK") throw new Error("Sun API not OK");
-    return { sunrise: new Date(data.results.sunrise), sunset: new Date(data.results.sunset) };
-  }
-
-  async function fetchWeatherAndRain(lat, lng) {
-    var url =
-      "https://api.open-meteo.com/v1/forecast?latitude=" + lat +
-      "&longitude=" + lng +
-      "&current_weather=true&hourly=precipitation_probability,precipitation&timezone=auto";
-
-    var res = await fetch(url);
-    if (!res.ok) throw new Error("Weather API failed");
-    var data = await res.json();
-
-    var cw = data.current_weather;
-    var times = (data.hourly && data.hourly.time) ? data.hourly.time : [];
-    var pop = (data.hourly && data.hourly.precipitation_probability) ? data.hourly.precipitation_probability : [];
-    var prc = (data.hourly && data.hourly.precipitation) ? data.hourly.precipitation : [];
-
-    if (!cw) throw new Error("No current weather");
-
-    var now = new Date();
-    var bestIdx = 0;
-    var bestDiff = Infinity;
-
-    for (var i = 0; i < times.length; i++) {
-      var t = new Date(times[i]);
-      var diff = Math.abs(t.getTime() - now.getTime());
-      if (diff < bestDiff) { bestDiff = diff; bestIdx = i; }
-    }
-
-    var nextIdx = Math.min(bestIdx + 1, pop.length - 1);
-    var rainChance = (pop[nextIdx] != null) ? pop[nextIdx] : (pop[bestIdx] != null ? pop[bestIdx] : null);
-    var rainMm = (prc[nextIdx] != null) ? prc[nextIdx] : (prc[bestIdx] != null ? prc[bestIdx] : null);
-
-    return {
-      temp: cw.temperature,
-      wind: cw.windspeed,
-      rainChance: rainChance,
-      rainMm: rainMm
-    };
-  }
-
-  function minutesToHM(mins) {
-    var h = Math.floor(mins / 60);
-    var m = Math.round(mins % 60);
-    return h + "h " + pad2(m) + "m";
-  }
-
-  function applyThemeFromSun(sunrise, sunset) {
-    var now = new Date();
-    var goldenMinutes = 30;
-    var goldenMs = goldenMinutes * 60 * 1000;
-
-    var goldenAfterSunriseStart = sunrise;
-    var goldenAfterSunriseEnd = new Date(sunrise.getTime() + goldenMs);
-
-    var goldenBeforeSunsetStart = new Date(sunset.getTime() - goldenMs);
-    var goldenBeforeSunsetEnd = sunset;
-
-    var isGolden =
-      (now >= goldenAfterSunriseStart && now <= goldenAfterSunriseEnd) ||
-      (now >= goldenBeforeSunsetStart && now <= goldenBeforeSunsetEnd);
-
-    var isDay = now >= sunrise && now < sunset;
-
-    var theme = "dark";
-    if (isGolden) theme = "golden";
-    else if (isDay) theme = "light";
-
-    document.documentElement.dataset.theme = theme;
-
-    var label = (theme === "light") ? "Day" : (theme === "golden") ? "Golden" : "Night";
-    setThemeText(label, "Golden window ±" + goldenMinutes + " mins");
-  }
-
-  function scheduleNextSwitch(sunrise, sunset) {
-    var now = new Date();
-    var goldenMinutes = 30;
-    var goldenMs = goldenMinutes * 60 * 1000;
-
-    var boundaries = [
-      sunrise,
-      new Date(sunrise.getTime() + goldenMs),
-      new Date(sunset.getTime() - goldenMs),
-      sunset
-    ].filter(function (t) { return t.getTime() > now.getTime(); });
-
-    if (boundaries.length === 0) return;
-
-    boundaries.sort(function (a, b) { return a.getTime() - b.getTime(); });
-    var next = boundaries[0];
-
-    var ms = next.getTime() - now.getTime();
-    setTimeout(function () {
-      applyThemeFromSun(sunrise, sunset);
-      scheduleNextSwitch(sunrise, sunset);
-    }, Math.max(5000, ms + 5000));
-  }
-
-  async function initEverything() {
-    var fallback = { lat: 51.0688, lng: -1.7945 };
-
-    var position = await new Promise(function (resolve) {
-      if (!navigator.geolocation) return resolve(null);
-      navigator.geolocation.getCurrentPosition(
-        function (pos) { resolve(pos); },
-        function () { resolve(null); },
-        { enableHighAccuracy: false, timeout: 4000, maximumAge: 3600000 }
-      );
-    });
-
-    var lat = position && position.coords && position.coords.latitude != null ? position.coords.latitude : fallback.lat;
-    var lng = position && position.coords && position.coords.longitude != null ? position.coords.longitude : fallback.lng;
-
-    // Sun + daylight in the same card
-    try {
-      setCard("sun", { value: "Loading…", hint: "Fetching sunrise/sunset…" });
-
-      var st = await fetchSunTimes(lat, lng);
-      var sunrise = st.sunrise;
-      var sunset = st.sunset;
-
-      var daylightMins = (sunset.getTime() - sunrise.getTime()) / (60 * 1000);
-      var daylight = minutesToHM(daylightMins);
-
-      setCard("sun", {
-        value: fmtTime(sunrise) + " ↑  " + fmtTime(sunset) + " ↓",
-        hint: "Daylight: " + daylight
-      });
-
-      applyThemeFromSun(sunrise, sunset);
-      scheduleNextSwitch(sunrise, sunset);
-    } catch (e) {
-      setCard("sun", { value: "Unavailable", hint: "Couldn’t fetch sun times" });
-      setThemeText("Auto", "—");
-    }
-
-    // Weather card: temp + rain + wind
-    try {
-      setCard("weather", { value: "Loading…", hint: "Fetching weather…" });
-
-      var w = await fetchWeatherAndRain(lat, lng);
-
-      var tempText = Math.round(w.temp) + "°C";
-      var windText = "Wind " + Math.round(w.wind) + " km/h";
-
-      var chance = w.rainChance != null ? w.rainChance : null;
-      var mm = w.rainMm != null ? w.rainMm : null;
-
-      var rainText = "Rain: —";
-      if (chance !== null) {
-        var mmText = (mm !== null && mm > 0) ? " (~" + mm.toFixed(1) + "mm)" : "";
-        rainText = "Rain: " + Math.round(chance) + "%" + mmText;
+      function getCard(key) {
+        return document.querySelector('.metric[data-key="' + key + '"]');
       }
 
-      setCard("weather", {
-        value: tempText,
-        hint: rainText + " • " + windText
-      });
-    } catch (e) {
-      setCard("weather", { value: "Unavailable", hint: "Weather fetch failed" });
-    }
+      function setCard(key, obj) {
+        var card = getCard(key);
+        if (!card) return;
+        if (obj.value !== undefined) card.querySelector(".value").textContent = obj.value;
+        if (obj.hint !== undefined) card.querySelector(".hint").textContent = obj.hint;
+      }
 
-    setTimeout(initEverything, 20 * 60 * 1000);
-  }
+      function setThemeText(label, hint) {
+        var el = document.getElementById("themeLabel");
+        var h = document.getElementById("themeHint");
+        if (el) el.textContent = label;
+        if (h) h.textContent = hint ? "• " + hint : "—";
+      }
 
-  initEverything();
-</script>
-  
+      // ---------- Premium: reveal on scroll ----------
+      (function () {
+        var els = document.querySelectorAll(".reveal");
+        var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        if (reduced || !("IntersectionObserver" in window)) {
+          els.forEach(function (el) { el.classList.add("is-in"); });
+          return;
+        }
+
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              e.target.classList.add("is-in");
+              io.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.12 });
+
+        els.forEach(function (el) { io.observe(el); });
+      })();
+
+      // ---------- Progress bar anim ----------
+      (function () {
+        var fill = document.querySelector(".progress-fill");
+        if (!fill) return;
+
+        var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        var target = clamp(parseInt(fill.dataset.progress || "0", 10), 0, 100);
+
+        function run() {
+          setTimeout(function () {
+            fill.style.width = target + "%";
+          }, 120);
+        }
+
+        if (reduced || !("IntersectionObserver" in window)) return run();
+
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              run();
+              io.disconnect();
+            }
+          });
+        }, { threshold: 0.35 });
+
+        io.observe(fill);
+      })();
+
+      // ---------- Local time ----------
+      (function () {
+        function tick() {
+          var d = new Date();
+          setCard("time", {
+            value: d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+            hint: d.toLocaleDateString([], { weekday: "short", day: "2-digit", month: "short" })
+          });
+        }
+        tick();
+        setInterval(tick, 15000);
+      })();
+
+      // ---------- Moon phase (local calc) ----------
+      function moonPhaseFraction(date) {
+        if (!date) date = new Date();
+        var synodicMonth = 29.530588853;
+        var knownNewMoon = Date.UTC(2000, 0, 6, 18, 14, 0);
+        var daysSince = (date.getTime() - knownNewMoon) / (1000 * 60 * 60 * 24);
+        var phase = (daysSince % synodicMonth) / synodicMonth;
+        return (phase + 1) % 1;
+      }
+
+      function moonEmojiAndName(frac) {
+        var idx = Math.floor(((frac + 1 / 16) % 1) * 8);
+        var phases = [
+          { e: "🌑", n: "New" },
+          { e: "🌒", n: "Waxing crescent" },
+          { e: "🌓", n: "First quarter" },
+          { e: "🌔", n: "Waxing gibbous" },
+          { e: "🌕", n: "Full" },
+          { e: "🌖", n: "Waning gibbous" },
+          { e: "🌗", n: "Last quarter" },
+          { e: "🌘", n: "Waning crescent" }
+        ];
+        return phases[idx];
+      }
+
+      function setMoon() {
+        var frac = moonPhaseFraction(new Date());
+        var p = moonEmojiAndName(frac);
+        var pct = Math.round(frac * 100);
+        setCard("moon", { value: p.e + " " + p.n, hint: "Phase: " + pct + "% through cycle" });
+      }
+      setMoon();
+      setInterval(setMoon, 6 * 60 * 60 * 1000);
+
+      // ---------- APIs ----------
+      async function fetchSunTimes(lat, lng) {
+        var url = "https://api.sunrise-sunset.org/json?lat=" + lat + "&lng=" + lng + "&formatted=0";
+        var res = await fetch(url);
+        if (!res.ok) throw new Error("Sun API failed");
+        var data = await res.json();
+        if (data.status !== "OK") throw new Error("Sun API not OK");
+        return { sunrise: new Date(data.results.sunrise), sunset: new Date(data.results.sunset) };
+      }
+
+      async function fetchWeatherAndRain(lat, lng) {
+        var url =
+          "https://api.open-meteo.com/v1/forecast?latitude=" + lat +
+          "&longitude=" + lng +
+          "&current_weather=true&hourly=precipitation_probability,precipitation&timezone=auto";
+
+        var res = await fetch(url);
+        if (!res.ok) throw new Error("Weather API failed");
+        var data = await res.json();
+
+        var cw = data.current_weather;
+        var times = (data.hourly && data.hourly.time) ? data.hourly.time : [];
+        var pop = (data.hourly && data.hourly.precipitation_probability) ? data.hourly.precipitation_probability : [];
+        var prc = (data.hourly && data.hourly.precipitation) ? data.hourly.precipitation : [];
+
+        if (!cw) throw new Error("No current weather");
+
+        var now = new Date();
+        var bestIdx = 0;
+        var bestDiff = Infinity;
+
+        for (var i = 0; i < times.length; i++) {
+          var t = new Date(times[i]);
+          var diff = Math.abs(t.getTime() - now.getTime());
+          if (diff < bestDiff) { bestDiff = diff; bestIdx = i; }
+        }
+
+        var nextIdx = Math.min(bestIdx + 1, pop.length - 1);
+        var rainChance = (pop[nextIdx] != null) ? pop[nextIdx] : (pop[bestIdx] != null ? pop[bestIdx] : null);
+        var rainMm = (prc[nextIdx] != null) ? prc[nextIdx] : (prc[bestIdx] != null ? prc[bestIdx] : null);
+
+        return {
+          temp: cw.temperature,
+          wind: cw.windspeed,
+          rainChance: rainChance,
+          rainMm: rainMm
+        };
+      }
+
+      function minutesToHM(mins) {
+        var h = Math.floor(mins / 60);
+        var m = Math.round(mins % 60);
+        return h + "h " + pad2(m) + "m";
+      }
+
+      function applyThemeFromSun(sunrise, sunset) {
+        var now = new Date();
+        var goldenMinutes = 30;
+        var goldenMs = goldenMinutes * 60 * 1000;
+
+        var goldenAfterSunriseStart = sunrise;
+        var goldenAfterSunriseEnd = new Date(sunrise.getTime() + goldenMs);
+
+        var goldenBeforeSunsetStart = new Date(sunset.getTime() - goldenMs);
+        var goldenBeforeSunsetEnd = sunset;
+
+        var isGolden =
+          (now >= goldenAfterSunriseStart && now <= goldenAfterSunriseEnd) ||
+          (now >= goldenBeforeSunsetStart && now <= goldenBeforeSunsetEnd);
+
+        var isDay = now >= sunrise && now < sunset;
+
+        var theme = "dark";
+        if (isGolden) theme = "golden";
+        else if (isDay) theme = "light";
+
+        document.documentElement.dataset.theme = theme;
+
+        var label = (theme === "light") ? "Day" : (theme === "golden") ? "Golden" : "Night";
+        setThemeText(label, "Golden window ±" + goldenMinutes + " mins");
+      }
+
+      function scheduleNextSwitch(sunrise, sunset) {
+        var now = new Date();
+        var goldenMinutes = 30;
+        var goldenMs = goldenMinutes * 60 * 1000;
+
+        var boundaries = [
+          sunrise,
+          new Date(sunrise.getTime() + goldenMs),
+          new Date(sunset.getTime() - goldenMs),
+          sunset
+        ].filter(function (t) { return t.getTime() > now.getTime(); });
+
+        if (boundaries.length === 0) return;
+
+        boundaries.sort(function (a, b) { return a.getTime() - b.getTime(); });
+        var next = boundaries[0];
+
+        var ms = next.getTime() - now.getTime();
+        setTimeout(function () {
+          applyThemeFromSun(sunrise, sunset);
+          scheduleNextSwitch(sunrise, sunset);
+        }, Math.max(5000, ms + 5000));
+      }
+
+      async function initEverything() {
+        var fallback = { lat: 51.0688, lng: -1.7945 };
+
+        var position = await new Promise(function (resolve) {
+          if (!navigator.geolocation) return resolve(null);
+          navigator.geolocation.getCurrentPosition(
+            function (pos) { resolve(pos); },
+            function () { resolve(null); },
+            { enableHighAccuracy: false, timeout: 4000, maximumAge: 3600000 }
+          );
+        });
+
+        var lat = position && position.coords && position.coords.latitude != null ? position.coords.latitude : fallback.lat;
+        var lng = position && position.coords && position.coords.longitude != null ? position.coords.longitude : fallback.lng;
+
+        // Sun + daylight in same card
+        try {
+          setCard("sun", { value: "Loading…", hint: "Fetching sunrise/sunset…" });
+
+          var st = await fetchSunTimes(lat, lng);
+          var sunrise = st.sunrise;
+          var sunset = st.sunset;
+
+          var daylightMins = (sunset.getTime() - sunrise.getTime()) / (60 * 1000);
+          var daylight = minutesToHM(daylightMins);
+
+          setCard("sun", {
+            value: fmtTime(sunrise) + " ↑  " + fmtTime(sunset) + " ↓",
+            hint: "Daylight: " + daylight
+          });
+
+          applyThemeFromSun(sunrise, sunset);
+          scheduleNextSwitch(sunrise, sunset);
+        } catch (e) {
+          setCard("sun", { value: "Unavailable", hint: "Couldn’t fetch sun times" });
+          setThemeText("Auto", "—");
+        }
+
+        // Weather card
+        try {
+          setCard("weather", { value: "Loading…", hint: "Fetching weather…" });
+
+          var w = await fetchWeatherAndRain(lat, lng);
+
+          var tempText = Math.round(w.temp) + "°C";
+          var windText = "Wind " + Math.round(w.wind) + " km/h";
+
+          var chance = w.rainChance != null ? w.rainChance : null;
+          var mm = w.rainMm != null ? w.rainMm : null;
+
+          var rainText = "Rain: —";
+          if (chance !== null) {
+            var mmText = (mm !== null && mm > 0) ? " (~" + mm.toFixed(1) + "mm)" : "";
+            rainText = "Rain: " + Math.round(chance) + "%" + mmText;
+          }
+
+          setCard("weather", {
+            value: tempText,
+            hint: rainText + " • " + windText
+          });
+        } catch (e) {
+          setCard("weather", { value: "Unavailable", hint: "Weather fetch failed" });
+        }
+
+        setTimeout(initEverything, 20 * 60 * 1000);
+      }
+
+      initEverything();
+    </script>
   </body>
 </html>
