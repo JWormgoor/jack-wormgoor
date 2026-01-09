@@ -758,294 +758,301 @@ const highlights = [
     </main>
 
     <script>
-      // ---------- helpers ----------
-      const pad2 = (n) => String(n).padStart(2, "0");
-      const fmtTime = (d) => `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
-      const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
+  // ---------- helpers ----------
+  function pad2(n) { return String(n).padStart(2, "0"); }
+  function fmtTime(d) { return pad2(d.getHours()) + ":" + pad2(d.getMinutes()); }
+  function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
 
-      const getCard = (key) => document.querySelector(\`.metric[data-key="\${key}"]\`);
-      const setCard = (key, { value, hint }) => {
-        const card = getCard(key);
-        if (!card) return;
-        if (value !== undefined) card.querySelector(".value").textContent = value;
-        if (hint !== undefined) card.querySelector(".hint").textContent = hint;
-      };
+  function getCard(key) {
+    return document.querySelector('.metric[data-key="' + key + '"]');
+  }
 
-      const setThemeText = (label, hint) => {
-        const el = document.getElementById("themeLabel");
-        const h = document.getElementById("themeHint");
-        if (el) el.textContent = label;
-        if (h) h.textContent = hint ? \`• \${hint}\` : "—";
-      };
+  function setCard(key, obj) {
+    var card = getCard(key);
+    if (!card) return;
+    if (obj.value !== undefined) card.querySelector(".value").textContent = obj.value;
+    if (obj.hint !== undefined) card.querySelector(".hint").textContent = obj.hint;
+  }
 
-      // ---------- Premium: reveal on scroll ----------
-      (() => {
-        const els = document.querySelectorAll(".reveal");
-        const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+  function setThemeText(label, hint) {
+    var el = document.getElementById("themeLabel");
+    var h = document.getElementById("themeHint");
+    if (el) el.textContent = label;
+    if (h) h.textContent = hint ? "• " + hint : "—";
+  }
 
-        if (reduced || !("IntersectionObserver" in window)) {
-          els.forEach((el) => el.classList.add("is-in"));
-          return;
+  // ---------- Premium: reveal on scroll ----------
+  (function () {
+    var els = document.querySelectorAll(".reveal");
+    var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (reduced || !("IntersectionObserver" in window)) {
+      els.forEach(function (el) { el.classList.add("is-in"); });
+      return;
+    }
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add("is-in");
+          io.unobserve(e.target);
         }
+      });
+    }, { threshold: 0.12 });
 
-        const io = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((e) => {
-              if (e.isIntersecting) {
-                e.target.classList.add("is-in");
-                io.unobserve(e.target);
-              }
-            });
-          },
-          { threshold: 0.12 }
-        );
+    els.forEach(function (el) { io.observe(el); });
+  })();
 
-        els.forEach((el) => io.observe(el));
-      })();
+  // ---------- Progress bar anim ----------
+  (function () {
+    var fill = document.querySelector(".progress-fill");
+    if (!fill) return;
 
-      // ---------- Progress bar anim ----------
-      (() => {
-        const fill = document.querySelector(".progress-fill");
-        if (!fill) return;
+    var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var target = clamp(parseInt(fill.dataset.progress || "0", 10), 0, 100);
 
-        const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
-        const target = clamp(parseInt(fill.dataset.progress || "0", 10), 0, 100);
-        const run = () => setTimeout(() => (fill.style.width = target + "%"), 120);
+    function run() {
+      setTimeout(function () {
+        fill.style.width = target + "%";
+      }, 120);
+    }
 
-        if (reduced || !("IntersectionObserver" in window)) return run();
+    if (reduced || !("IntersectionObserver" in window)) return run();
 
-        const io = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((e) => {
-              if (e.isIntersecting) {
-                run();
-                io.disconnect();
-              }
-            });
-          },
-          { threshold: 0.35 }
-        );
-
-        io.observe(fill);
-      })();
-
-      // ---------- Local time ----------
-      (() => {
-        const tick = () => {
-          const d = new Date();
-          setCard("time", {
-            value: d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-            hint: d.toLocaleDateString([], { weekday: "short", day: "2-digit", month: "short" }),
-          });
-        };
-        tick();
-        setInterval(tick, 15000);
-      })();
-
-      // ---------- Moon phase (local calc) ----------
-      function moonPhaseFraction(date = new Date()) {
-        const synodicMonth = 29.530588853;
-        const knownNewMoon = Date.UTC(2000, 0, 6, 18, 14, 0);
-        const daysSince = (date.getTime() - knownNewMoon) / (1000 * 60 * 60 * 24);
-        const phase = (daysSince % synodicMonth) / synodicMonth;
-        return (phase + 1) % 1;
-      }
-
-      function moonEmojiAndName(frac) {
-        const idx = Math.floor(((frac + 1/16) % 1) * 8);
-        const phases = [
-          { e: "🌑", n: "New" },
-          { e: "🌒", n: "Waxing crescent" },
-          { e: "🌓", n: "First quarter" },
-          { e: "🌔", n: "Waxing gibbous" },
-          { e: "🌕", n: "Full" },
-          { e: "🌖", n: "Waning gibbous" },
-          { e: "🌗", n: "Last quarter" },
-          { e: "🌘", n: "Waning crescent" },
-        ];
-        return phases[idx];
-      }
-
-      function setMoon() {
-        const frac = moonPhaseFraction(new Date());
-        const { e, n } = moonEmojiAndName(frac);
-        const pct = Math.round(frac * 100);
-        setCard("moon", { value: `${e} ${n}`, hint: `Phase: ${pct}% through cycle` });
-      }
-      setMoon();
-      setInterval(setMoon, 6 * 60 * 60 * 1000);
-
-      // ---------- APIs ----------
-      async function fetchSunTimes(lat, lng) {
-        const url = `https://api.sunrise-sunset.org/json?lat=${lat}&lng=${lng}&formatted=0`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error("Sun API failed");
-        const data = await res.json();
-        if (data.status !== "OK") throw new Error("Sun API not OK");
-        return { sunrise: new Date(data.results.sunrise), sunset: new Date(data.results.sunset) };
-      }
-
-      async function fetchWeatherAndRain(lat, lng) {
-        const url =
-          `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}` +
-          `&current_weather=true&hourly=precipitation_probability,precipitation&timezone=auto`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error("Weather API failed");
-        const data = await res.json();
-
-        const cw = data.current_weather;
-        const times = data.hourly?.time || [];
-        const pop = data.hourly?.precipitation_probability || [];
-        const prc = data.hourly?.precipitation || [];
-
-        if (!cw) throw new Error("No current weather");
-
-        const now = new Date();
-        let bestIdx = 0;
-        let bestDiff = Infinity;
-        for (let i = 0; i < times.length; i++) {
-          const t = new Date(times[i]);
-          const diff = Math.abs(t.getTime() - now.getTime());
-          if (diff < bestDiff) { bestDiff = diff; bestIdx = i; }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          run();
+          io.disconnect();
         }
+      });
+    }, { threshold: 0.35 });
 
-        const nextIdx = Math.min(bestIdx + 1, pop.length - 1);
-        const rainChance = pop[nextIdx] ?? pop[bestIdx] ?? null;
-        const rainMm = prc[nextIdx] ?? prc[bestIdx] ?? null;
+    io.observe(fill);
+  })();
 
-        return {
-          temp: cw.temperature,
-          wind: cw.windspeed,
-          rainChance,
-          rainMm,
-        };
+  // ---------- Local time ----------
+  (function () {
+    function tick() {
+      var d = new Date();
+      setCard("time", {
+        value: d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        hint: d.toLocaleDateString([], { weekday: "short", day: "2-digit", month: "short" })
+      });
+    }
+    tick();
+    setInterval(tick, 15000);
+  })();
+
+  // ---------- Moon phase (local calc) ----------
+  function moonPhaseFraction(date) {
+    if (!date) date = new Date();
+    var synodicMonth = 29.530588853;
+    var knownNewMoon = Date.UTC(2000, 0, 6, 18, 14, 0);
+    var daysSince = (date.getTime() - knownNewMoon) / (1000 * 60 * 60 * 24);
+    var phase = (daysSince % synodicMonth) / synodicMonth;
+    return (phase + 1) % 1;
+  }
+
+  function moonEmojiAndName(frac) {
+    var idx = Math.floor(((frac + 1 / 16) % 1) * 8);
+    var phases = [
+      { e: "🌑", n: "New" },
+      { e: "🌒", n: "Waxing crescent" },
+      { e: "🌓", n: "First quarter" },
+      { e: "🌔", n: "Waxing gibbous" },
+      { e: "🌕", n: "Full" },
+      { e: "🌖", n: "Waning gibbous" },
+      { e: "🌗", n: "Last quarter" },
+      { e: "🌘", n: "Waning crescent" }
+    ];
+    return phases[idx];
+  }
+
+  function setMoon() {
+    var frac = moonPhaseFraction(new Date());
+    var p = moonEmojiAndName(frac);
+    var pct = Math.round(frac * 100);
+    setCard("moon", { value: p.e + " " + p.n, hint: "Phase: " + pct + "% through cycle" });
+  }
+  setMoon();
+  setInterval(setMoon, 6 * 60 * 60 * 1000);
+
+  // ---------- APIs ----------
+  async function fetchSunTimes(lat, lng) {
+    var url = "https://api.sunrise-sunset.org/json?lat=" + lat + "&lng=" + lng + "&formatted=0";
+    var res = await fetch(url);
+    if (!res.ok) throw new Error("Sun API failed");
+    var data = await res.json();
+    if (data.status !== "OK") throw new Error("Sun API not OK");
+    return { sunrise: new Date(data.results.sunrise), sunset: new Date(data.results.sunset) };
+  }
+
+  async function fetchWeatherAndRain(lat, lng) {
+    var url =
+      "https://api.open-meteo.com/v1/forecast?latitude=" + lat +
+      "&longitude=" + lng +
+      "&current_weather=true&hourly=precipitation_probability,precipitation&timezone=auto";
+
+    var res = await fetch(url);
+    if (!res.ok) throw new Error("Weather API failed");
+    var data = await res.json();
+
+    var cw = data.current_weather;
+    var times = (data.hourly && data.hourly.time) ? data.hourly.time : [];
+    var pop = (data.hourly && data.hourly.precipitation_probability) ? data.hourly.precipitation_probability : [];
+    var prc = (data.hourly && data.hourly.precipitation) ? data.hourly.precipitation : [];
+
+    if (!cw) throw new Error("No current weather");
+
+    var now = new Date();
+    var bestIdx = 0;
+    var bestDiff = Infinity;
+
+    for (var i = 0; i < times.length; i++) {
+      var t = new Date(times[i]);
+      var diff = Math.abs(t.getTime() - now.getTime());
+      if (diff < bestDiff) { bestDiff = diff; bestIdx = i; }
+    }
+
+    var nextIdx = Math.min(bestIdx + 1, pop.length - 1);
+    var rainChance = (pop[nextIdx] != null) ? pop[nextIdx] : (pop[bestIdx] != null ? pop[bestIdx] : null);
+    var rainMm = (prc[nextIdx] != null) ? prc[nextIdx] : (prc[bestIdx] != null ? prc[bestIdx] : null);
+
+    return {
+      temp: cw.temperature,
+      wind: cw.windspeed,
+      rainChance: rainChance,
+      rainMm: rainMm
+    };
+  }
+
+  function minutesToHM(mins) {
+    var h = Math.floor(mins / 60);
+    var m = Math.round(mins % 60);
+    return h + "h " + pad2(m) + "m";
+  }
+
+  function applyThemeFromSun(sunrise, sunset) {
+    var now = new Date();
+    var goldenMinutes = 30;
+    var goldenMs = goldenMinutes * 60 * 1000;
+
+    var goldenAfterSunriseStart = sunrise;
+    var goldenAfterSunriseEnd = new Date(sunrise.getTime() + goldenMs);
+
+    var goldenBeforeSunsetStart = new Date(sunset.getTime() - goldenMs);
+    var goldenBeforeSunsetEnd = sunset;
+
+    var isGolden =
+      (now >= goldenAfterSunriseStart && now <= goldenAfterSunriseEnd) ||
+      (now >= goldenBeforeSunsetStart && now <= goldenBeforeSunsetEnd);
+
+    var isDay = now >= sunrise && now < sunset;
+
+    var theme = "dark";
+    if (isGolden) theme = "golden";
+    else if (isDay) theme = "light";
+
+    document.documentElement.dataset.theme = theme;
+
+    var label = (theme === "light") ? "Day" : (theme === "golden") ? "Golden" : "Night";
+    setThemeText(label, "Golden window ±" + goldenMinutes + " mins");
+  }
+
+  function scheduleNextSwitch(sunrise, sunset) {
+    var now = new Date();
+    var goldenMinutes = 30;
+    var goldenMs = goldenMinutes * 60 * 1000;
+
+    var boundaries = [
+      sunrise,
+      new Date(sunrise.getTime() + goldenMs),
+      new Date(sunset.getTime() - goldenMs),
+      sunset
+    ].filter(function (t) { return t.getTime() > now.getTime(); });
+
+    if (boundaries.length === 0) return;
+
+    boundaries.sort(function (a, b) { return a.getTime() - b.getTime(); });
+    var next = boundaries[0];
+
+    var ms = next.getTime() - now.getTime();
+    setTimeout(function () {
+      applyThemeFromSun(sunrise, sunset);
+      scheduleNextSwitch(sunrise, sunset);
+    }, Math.max(5000, ms + 5000));
+  }
+
+  async function initEverything() {
+    var fallback = { lat: 51.0688, lng: -1.7945 };
+
+    var position = await new Promise(function (resolve) {
+      if (!navigator.geolocation) return resolve(null);
+      navigator.geolocation.getCurrentPosition(
+        function (pos) { resolve(pos); },
+        function () { resolve(null); },
+        { enableHighAccuracy: false, timeout: 4000, maximumAge: 3600000 }
+      );
+    });
+
+    var lat = position && position.coords && position.coords.latitude != null ? position.coords.latitude : fallback.lat;
+    var lng = position && position.coords && position.coords.longitude != null ? position.coords.longitude : fallback.lng;
+
+    // Sun + daylight in the same card
+    try {
+      setCard("sun", { value: "Loading…", hint: "Fetching sunrise/sunset…" });
+
+      var st = await fetchSunTimes(lat, lng);
+      var sunrise = st.sunrise;
+      var sunset = st.sunset;
+
+      var daylightMins = (sunset.getTime() - sunrise.getTime()) / (60 * 1000);
+      var daylight = minutesToHM(daylightMins);
+
+      setCard("sun", {
+        value: fmtTime(sunrise) + " ↑  " + fmtTime(sunset) + " ↓",
+        hint: "Daylight: " + daylight
+      });
+
+      applyThemeFromSun(sunrise, sunset);
+      scheduleNextSwitch(sunrise, sunset);
+    } catch (e) {
+      setCard("sun", { value: "Unavailable", hint: "Couldn’t fetch sun times" });
+      setThemeText("Auto", "—");
+    }
+
+    // Weather card: temp + rain + wind
+    try {
+      setCard("weather", { value: "Loading…", hint: "Fetching weather…" });
+
+      var w = await fetchWeatherAndRain(lat, lng);
+
+      var tempText = Math.round(w.temp) + "°C";
+      var windText = "Wind " + Math.round(w.wind) + " km/h";
+
+      var chance = w.rainChance != null ? w.rainChance : null;
+      var mm = w.rainMm != null ? w.rainMm : null;
+
+      var rainText = "Rain: —";
+      if (chance !== null) {
+        var mmText = (mm !== null && mm > 0) ? " (~" + mm.toFixed(1) + "mm)" : "";
+        rainText = "Rain: " + Math.round(chance) + "%" + mmText;
       }
 
-      function minutesToHM(mins) {
-        const h = Math.floor(mins / 60);
-        const m = Math.round(mins % 60);
-        return `${h}h ${pad2(m)}m`;
-      }
+      setCard("weather", {
+        value: tempText,
+        hint: rainText + " • " + windText
+      });
+    } catch (e) {
+      setCard("weather", { value: "Unavailable", hint: "Weather fetch failed" });
+    }
 
-      function applyThemeFromSun(sunrise, sunset) {
-        const now = new Date();
+    setTimeout(initEverything, 20 * 60 * 1000);
+  }
 
-        const goldenMinutes = 30;
-        const goldenMs = goldenMinutes * 60 * 1000;
-
-        const goldenAfterSunriseStart = sunrise;
-        const goldenAfterSunriseEnd = new Date(sunrise.getTime() + goldenMs);
-
-        const goldenBeforeSunsetStart = new Date(sunset.getTime() - goldenMs);
-        const goldenBeforeSunsetEnd = sunset;
-
-        const isGolden =
-          (now >= goldenAfterSunriseStart && now <= goldenAfterSunriseEnd) ||
-          (now >= goldenBeforeSunsetStart && now <= goldenBeforeSunsetEnd);
-
-        const isDay = now >= sunrise && now < sunset;
-
-        let theme;
-        if (isGolden) theme = "golden";
-        else if (isDay) theme = "light";
-        else theme = "dark";
-
-        document.documentElement.dataset.theme = theme;
-
-        const label = theme === "light" ? "Day" : theme === "golden" ? "Golden" : "Night";
-        setThemeText(label, `Golden window ±${goldenMinutes} mins`);
-      }
-
-      function scheduleNextSwitch(sunrise, sunset) {
-        const now = new Date();
-        const goldenMinutes = 30;
-        const goldenMs = goldenMinutes * 60 * 1000;
-
-        const boundaries = [
-          sunrise,
-          new Date(sunrise.getTime() + goldenMs),
-          new Date(sunset.getTime() - goldenMs),
-          sunset,
-        ].filter((t) => t.getTime() > now.getTime());
-
-        if (boundaries.length === 0) return;
-
-        boundaries.sort((a, b) => a.getTime() - b.getTime());
-        const next = boundaries[0];
-
-        const ms = next.getTime() - now.getTime();
-        setTimeout(() => {
-          applyThemeFromSun(sunrise, sunset);
-          scheduleNextSwitch(sunrise, sunset);
-        }, Math.max(5000, ms + 5000));
-      }
-
-      async function initEverything() {
-        const fallback = { lat: 51.0688, lng: -1.7945 };
-
-        const position = await new Promise((resolve) => {
-          if (!navigator.geolocation) return resolve(null);
-          navigator.geolocation.getCurrentPosition(
-            (pos) => resolve(pos),
-            () => resolve(null),
-            { enableHighAccuracy: false, timeout: 4000, maximumAge: 3600000 }
-          );
-        });
-
-        const lat = position?.coords?.latitude ?? fallback.lat;
-        const lng = position?.coords?.longitude ?? fallback.lng;
-
-        // Sun + daylight in the same card
-        try {
-          setCard("sun", { value: "Loading…", hint: "Fetching sunrise/sunset…" });
-
-          const { sunrise, sunset } = await fetchSunTimes(lat, lng);
-          const daylightMins = (sunset.getTime() - sunrise.getTime()) / (60 * 1000);
-          const daylight = minutesToHM(daylightMins);
-
-          setCard("sun", {
-            value: `${fmtTime(sunrise)} ↑  ${fmtTime(sunset)} ↓`,
-            hint: `Daylight: ${daylight}`,
-          });
-
-          applyThemeFromSun(sunrise, sunset);
-          scheduleNextSwitch(sunrise, sunset);
-        } catch (e) {
-          setCard("sun", { value: "Unavailable", hint: "Couldn’t fetch sun times" });
-          setThemeText("Auto", "—");
-        }
-
-        // Weather card: temp + rain + wind
-        try {
-          setCard("weather", { value: "Loading…", hint: "Fetching weather…" });
-
-          const w = await fetchWeatherAndRain(lat, lng);
-
-          const tempText = `${Math.round(w.temp)}°C`;
-          const windText = `Wind ${Math.round(w.wind)} km/h`;
-
-          const chance = w.rainChance ?? null;
-          const mm = w.rainMm ?? null;
-
-          let rainText = "Rain: —";
-          if (chance !== null) {
-            const mmText = (mm !== null && mm > 0) ? ` (~${mm.toFixed(1)}mm)` : "";
-            rainText = `Rain: ${Math.round(chance)}%${mmText}`;
-          }
-
-          setCard("weather", {
-            value: tempText,
-            hint: `${rainText} • ${windText}`,
-          });
-        } catch (e) {
-          setCard("weather", { value: "Unavailable", hint: "Weather fetch failed" });
-        }
-
-        // Refresh periodically
-        setTimeout(() => initEverything(), 20 * 60 * 1000);
-      }
-
-      initEverything();
-    </script>
+  initEverything();
+</script>
+  
   </body>
 </html>
