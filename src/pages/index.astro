@@ -15,7 +15,7 @@ const metrics = [
 const currentProject = {
   title: "Toy Fiat 500 to Petrol",
   desc:
-    "Taking a kid’s ride-on car and giving it the power of two-stroke: custom chassis, full electrics, brakes, and a clean control setup. Not just a prop — a proper build.",
+    "Taking a kid’s ride-on car and giving it the power of two stroke: custom chassis, full electrics, brakes, and a clean control setup. Not just a prop, a proper build.",
   status: "In progress",
   progress: 85,
   img: "/projects/fiat-rideon.jpg",
@@ -27,7 +27,7 @@ const projects = [
   {
     title: "Shopping Trolley Drift Cart",
     desc:
-      "A motorised drift trolley build — lightweight, chaotic, and surprisingly controllable once dialled in. Filmed and published.",
+      "A motorised drift trolley build. Lightweight, chaotic, and surprisingly controllable once dialled in. Filmed and published.",
     tag: "Build + Video",
     status: "Completed",
     img: "/projects/trolley-drift-cart.jpg",
@@ -42,14 +42,14 @@ const projects = [
   {
     title: "FM Emergency Broadcaster (≈7-mile range)",
     desc:
-      "Built using a car FM transmitter and upgraded into a longer-range local broadcast experiment for emergency-style messaging — able to broadcast speech, tones, and music.",
+      "Built using a car FM transmitter and upgraded into a longer range local broadcast experiment for emergency style messaging. Able to broadcast speech, tones, and music.",
     tag: "Radio / RF",
     status: "Completed",
     img: "/projects/fm-emergency-broadcaster.jpg",
     alt: "An outdoor antenna mounted near a window at night",
     links: [{ label: "Write-up (soon)", href: "#" }],
     bullets: [
-      "Problem: Low-cost broadcast for local alerts/experiments.",
+      "Problem: Low cost broadcast for local alerts and experiments.",
       "Build: Transmitter + antenna + placement + tuning.",
       "Result: Near ~7 miles effective range in testing.",
     ],
@@ -57,7 +57,7 @@ const projects = [
   {
     title: "Flame Thrower Build",
     desc:
-      "A finished build project — one of those ‘because I can’ experiments, documented with care and restraint.",
+      "A finished build project. One of those ‘because I can’ experiments, documented with care and restraint.",
     tag: "Build",
     status: "Completed",
     img: "/projects/flame-thrower.jpg",
@@ -75,15 +75,15 @@ const capabilities = [
   { title: "Rapid prototyping", desc: "From idea to working thing. Fast iteration, practical choices.", icon: "⚙️" },
   { title: "Workshop builds", desc: "Mechanical mods, fabrication, making parts do what they need to do.", icon: "🛠️" },
   { title: "Electronics & wiring", desc: "Power, switching, controls, keeping it reliable.", icon: "🔌" },
-  { title: "Radio experiments", desc: "FM/RF experiments and communication tests.", icon: "📻" },
-  { title: "Web & automation", desc: "Astro, APIs, Cloudflare — clean, fast, and maintainable.", icon: "🌐" },
-  { title: "Video documentation", desc: "I don’t just build — I film, explain, and publish the story.", icon: "🎥" },
+  { title: "Radio experiments", desc: "FM and RF experiments and communication tests.", icon: "📻" },
+  { title: "Web & automation", desc: "Astro, APIs, Cloudflare. Clean, fast, and maintainable.", icon: "🌐" },
+  { title: "Video documentation", desc: "I build, I film, and I explain the story clearly.", icon: "🎥" },
 ];
 
 const highlights = [
   { k: "Problem solving", v: "Practical & methodical", d: "Break problems down, test ideas quickly, iterate until it works." },
-  { k: "Build mindset", v: "Real-world focused", d: "Designing things that survive use, not just look good on paper." },
-  { k: "Communication", v: "Clear & documented", d: "Explaining builds, decisions, and results clearly — on video and in writing." },
+  { k: "Build mindset", v: "Real world focused", d: "Designing things that survive use, not just look good on paper." },
+  { k: "Communication", v: "Clear & documented", d: "Explaining builds, decisions, and results clearly on video and in writing." },
   { k: "Reliability", v: "Consistent delivery", d: "Comfortable working independently or in teams, meeting deadlines and standards." },
 ];
 ---
@@ -94,7 +94,7 @@ const highlights = [
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Jack Wormgoor</title>
-    <meta name="description" content="Jack Wormgoor — builder, experimenter, and problem solver." />
+    <meta name="description" content="Jack Wormgoor. Builder, experimenter, problem solver." />
 
     <style>
       :root {
@@ -201,7 +201,6 @@ const highlights = [
         box-shadow: none;
       }
 
-      /* Featured media slot */
       .slot {
         background: linear-gradient(135deg, rgba(127,127,127,0.18), rgba(127,127,127,0.06));
         border: 1px solid var(--line);
@@ -213,9 +212,7 @@ const highlights = [
         align-content: start;
         transition: background-color 900ms ease, border-color 900ms ease, box-shadow 900ms ease;
       }
-      .slot .slotTop {
-        display: flex; justify-content: space-between; align-items: center; gap: 10px;
-      }
+      .slot .slotTop { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
       .slot .tag {
         font-size: 0.75rem;
         border: 1px solid var(--line);
@@ -238,7 +235,6 @@ const highlights = [
       }
       .slot .ph small { display: block; opacity: 0.9; }
 
-      /* Metrics (4 cards) */
       .metrics {
         display: grid;
         gap: 12px;
@@ -261,14 +257,9 @@ const highlights = [
 
       .card:hover, .metric:hover { transform: translateY(-2px); }
 
-      .themeLine {
-        margin-top: 10px;
-        color: var(--muted);
-        font-size: 0.92rem;
-      }
+      .themeLine { margin-top: 10px; color: var(--muted); font-size: 0.92rem; }
       .themeLine strong { color: var(--ink); }
 
-      /* Sections */
       .section { margin-top: 26px; }
       .sectionhead {
         display: flex; align-items: flex-end; justify-content: space-between;
@@ -279,7 +270,6 @@ const highlights = [
       .sectionhead h2 { margin: 0; font-size: 1.3rem; }
       .muted { color: var(--muted); }
 
-      /* Value strip */
       .valueStrip {
         margin-top: 18px;
         display: grid;
@@ -288,11 +278,24 @@ const highlights = [
         align-items: stretch;
       }
       .valueStrip .card { padding: 18px; }
+
       .proof {
-        display: grid;
+        display: flex;
+        flex-direction: column;
         gap: 10px;
         padding: 18px;
       }
+
+      .proofHeaderRow {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .proofHeaderRow h2 { margin: 0; }
+      .proofSub { margin: 0; color: var(--muted); font-size: 0.95rem; text-align: right; }
+
       .proofRow {
         display: flex;
         justify-content: space-between;
@@ -303,35 +306,26 @@ const highlights = [
         background: rgba(255,255,255,0.25);
       }
       .proofRow span { color: var(--muted); }
-      .proofRow strong { font-weight: 750; }
+      .proofRow strong { font-weight: 750; text-align: right; }
 
-      /* Highlights */
       .highlights {
         margin-top: 12px;
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 12px;
       }
-      .mini {
-        padding: 14px;
-      }
+      .mini { padding: 14px; }
       .mini .k { color: var(--muted); font-size: 0.8rem; }
       .mini .v { font-weight: 850; font-size: 1.15rem; margin-top: 4px; }
       .mini .d { color: var(--muted); font-size: 0.82rem; margin-top: 6px; }
 
-      /* Capabilities */
       .caps {
         margin-top: 12px;
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 14px;
       }
-      .cap {
-        padding: 16px;
-        display: grid;
-        gap: 8px;
-        align-content: start;
-      }
+      .cap { padding: 16px; display: grid; gap: 8px; align-content: start; }
       .capTop { display: flex; gap: 10px; align-items: center; }
       .capIcon {
         width: 38px; height: 38px;
@@ -344,7 +338,6 @@ const highlights = [
       .cap h3 { margin: 0; font-size: 1.02rem; }
       .cap p { margin: 0; color: var(--muted); }
 
-      /* Current project */
       .featured {
         display: grid;
         grid-template-columns: 1.1fr 0.9fr;
@@ -354,11 +347,7 @@ const highlights = [
       }
 
       .progressWrap { margin-top: 12px; }
-      .progressTop {
-        display:flex; justify-content: space-between; gap: 12px;
-        font-size: 0.82rem; color: var(--muted);
-        margin-bottom: 6px;
-      }
+      .progressTop { display:flex; justify-content: space-between; gap: 12px; font-size: 0.82rem; color: var(--muted); margin-bottom: 6px; }
       .bar {
         height: 10px;
         border-radius: 999px;
@@ -373,14 +362,12 @@ const highlights = [
         transition: width 1200ms cubic-bezier(.2,.8,.2,1), background-color 900ms ease;
       }
 
-      /* Project cards */
       .cards {
         display: grid; gap: 14px; margin-top: 12px;
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
       .project { padding: 0; overflow: hidden; }
 
-      /* Standard square crop */
       .media {
         position: relative;
         width: 100%;
@@ -431,23 +418,15 @@ const highlights = [
 
       .footer { margin: 30px 0 10px; }
 
-      /* Reveal animation */
-      .reveal {
-        opacity: 0;
-        transform: translateY(8px);
-        transition: opacity 700ms ease, transform 700ms ease;
-      }
-      .reveal.is-in {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      .reveal { opacity: 0; transform: translateY(8px); transition: opacity 700ms ease, transform 700ms ease; }
+      .reveal.is-in { opacity: 1; transform: translateY(0); }
 
-      /* Responsive */
       @media (max-width: 980px) {
         .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .highlights { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .valueStrip { grid-template-columns: 1fr; }
         .heroTop { grid-template-columns: 1fr; }
+        .proofSub { text-align: left; }
       }
 
       @media (max-width: 900px) {
@@ -486,9 +465,9 @@ const highlights = [
         <div class="heroTop">
           <div class="card" style="padding:18px;">
             <p class="kicker">jackwormgoor.com</p>
-            <h1>Builder, experimenter, problem-solver.</h1>
+            <h1>Builder, experimenter, problem solver.</h1>
             <p class="lede">
-              I build real-world prototypes and the systems around them — workshop builds, radio experiments,
+              I build real world prototypes and the systems around them. Workshop builds, radio experiments,
               and web tools that pull live data.
             </p>
 
@@ -504,11 +483,11 @@ const highlights = [
               <span class="tag">Add an image later</span>
             </div>
             <div class="ph">
-              Add a strong “hero” image here
+              Add a strong hero image here
               <small>1600×1000 (or any 16:10-ish)</small>
             </div>
             <p class="muted" style="margin:0;">
-              One great image that shows the vibe (workshop / field test / build moment).
+              One great image that shows the vibe. Workshop, field test, or a build moment.
             </p>
           </aside>
         </div>
@@ -531,27 +510,28 @@ const highlights = [
           <article class="card reveal">
             <h2 style="margin:0 0 8px;">What I do</h2>
             <p class="muted" style="margin:0 0 10px;">
-              I design and build real-world systems — from mechanical workshop builds and radio experiments
-              to web tools that pull live data and react to the environment around them.
+              I design and build real world systems. Anything from mechanical workshop projects through to radio experiments,
+              and web tooling and much more.
             </p>
             <p class="muted" style="margin:0;">
-              I enjoy projects that sit between disciplines: where hardware meets software, where ideas
-              have to survive real use, and where the solution needs to be practical, explainable, and reliable.
-              If something can be built, tested, documented, and improved — that’s where I work best.
+              I like projects that have practical application to the real world, and all the phases of planning and building that are included throughout. I work best when the solution has to be practical, explainable, and reliable, and then documented properly.
             </p>
           </article>
 
           <aside class="card proof reveal">
-            <h2 style="margin:0;">Skills & Abilities</h2>
+            <div class="proofHeaderRow">
+              <h2>Skills & Abilities</h2>
+              <p class="proofSub">Strong communication, practical engineering mindset, and clean delivery</p>
+            </div>
 
             <div class="proofRow">
               <span>Core strengths</span>
-              <strong>Problem-solving • Planning • Attention to detail</strong>
+              <strong>Problem solving, planning, attention to detail</strong>
             </div>
 
             <div class="proofRow">
               <span>Working style</span>
-              <strong>Logical, hands-on, reliable under pressure</strong>
+              <strong>Logical, hands on, reliable under pressure</strong>
             </div>
 
             <div class="proofRow">
@@ -561,12 +541,7 @@ const highlights = [
 
             <div class="proofRow">
               <span>Documentation</span>
-              <strong>Clear written notes, diagrams, and video explanations</strong>
-            </div>
-
-            <div class="proofRow">
-              <span>YouTube</span>
-              <a class="actionLink" href={YOUTUBE_CHANNEL} target="_blank" rel="noreferrer" style="padding:6px 10px;">@jwormm</a>
+              <strong>Clear notes, diagrams, and video explanations</strong>
             </div>
           </aside>
         </div>
@@ -592,7 +567,7 @@ const highlights = [
       <section id="capabilities" class="section">
         <div class="sectionhead reveal">
           <h2>Capabilities</h2>
-          <p class="muted">What I’m good at — and what I actually enjoy doing.</p>
+          <p class="muted">What I’m good at and what I actually enjoy doing.</p>
         </div>
 
         <div class="caps">
@@ -611,7 +586,7 @@ const highlights = [
       <section class="section" aria-label="Current project">
         <div class="sectionhead reveal">
           <h2>Current project</h2>
-          <p class="muted">One thing I’m actively building right now.</p>
+          <p class="muted">What I’m actively working on right now.</p>
         </div>
 
         <div class="featured">
@@ -650,7 +625,7 @@ const highlights = [
       <section id="projects" class="section">
         <div class="sectionhead reveal">
           <h2>Selected projects</h2>
-          <p class="muted">Builds + experiments. More write-ups coming.</p>
+          <p class="muted">Builds and experiments. More write ups coming.</p>
         </div>
 
         <div class="cards">
@@ -698,7 +673,7 @@ const highlights = [
       <section id="contact" class="section">
         <div class="sectionhead reveal">
           <h2>Contact</h2>
-          <p class="muted">If you’ve got a project, collaboration, or a weird problem — I’m interested.</p>
+          <p class="muted">If you’ve got a project, collaboration, or a weird problem, I’m interested.</p>
         </div>
 
         <div class="cards" style="grid-template-columns: 1fr;">
@@ -721,7 +696,6 @@ const highlights = [
     </main>
 
     <script>
-      // ---------- helpers ----------
       function pad2(n) { return String(n).padStart(2, "0"); }
       function fmtTime(d) { return pad2(d.getHours()) + ":" + pad2(d.getMinutes()); }
       function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
@@ -744,7 +718,6 @@ const highlights = [
         if (h) h.textContent = hint ? "• " + hint : "—";
       }
 
-      // ---------- Premium: reveal on scroll ----------
       (function () {
         var els = document.querySelectorAll(".reveal");
         var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -766,7 +739,6 @@ const highlights = [
         els.forEach(function (el) { io.observe(el); });
       })();
 
-      // ---------- Progress bar anim ----------
       (function () {
         var fill = document.querySelector(".progress-fill");
         if (!fill) return;
@@ -794,7 +766,6 @@ const highlights = [
         io.observe(fill);
       })();
 
-      // ---------- Local time ----------
       (function () {
         function tick() {
           var d = new Date();
@@ -807,7 +778,6 @@ const highlights = [
         setInterval(tick, 15000);
       })();
 
-      // ---------- Moon phase (local calc) ----------
       function moonPhaseFraction(date) {
         if (!date) date = new Date();
         var synodicMonth = 29.530588853;
@@ -841,7 +811,6 @@ const highlights = [
       setMoon();
       setInterval(setMoon, 6 * 60 * 60 * 1000);
 
-      // ---------- APIs ----------
       async function fetchSunTimes(lat, lng) {
         var url = "https://api.sunrise-sunset.org/json?lat=" + lat + "&lng=" + lng + "&formatted=0";
         var res = await fetch(url);
@@ -962,7 +931,6 @@ const highlights = [
         var lat = position && position.coords && position.coords.latitude != null ? position.coords.latitude : fallback.lat;
         var lng = position && position.coords && position.coords.longitude != null ? position.coords.longitude : fallback.lng;
 
-        // Sun + daylight in same card
         try {
           setCard("sun", { value: "Loading…", hint: "Fetching sunrise/sunset…" });
 
@@ -985,7 +953,6 @@ const highlights = [
           setThemeText("Auto", "—");
         }
 
-        // Weather card
         try {
           setCard("weather", { value: "Loading…", hint: "Fetching weather…" });
 
